@@ -1,0 +1,47 @@
+\section{Related Work}\label{sec:relw}
+% This paper is concerned with computing backbones of propositional formulae, which was oriented from coloring problem \cite{CJG2001}, with a wide range of practical applications such as MaxSAT \cite{MMBM2005}.
+
+%A number of backbones extraction algorithms have been proposed in recent years.
+Kaiser and K\"{u}hlin proposed three model enumeration based algorithms for computing backbones \cite{KKW2001} using SAT solvers.
+%The first one iteratively assigns true (false) to each variable and tests the resulting formula for satisfiability.
+%The second one reuse the results of previous satisfiability checks and the last one maximizes the number of variables that
+%an be classified without satisfiability checking, which share same purpose as our work.
+%
+Dubois and Dequen proposed a heuristic search for computing backbones of hard 3-SAT formulae which yields DPL-type algorithms with a significant
+performance improvement over the best previous algorithms \cite{DD2001}.
+Climer et al. proposed a graph-based approach to discover backbones which replies on approximate lower and upper bounds to compute
+backbones \cite{CZ2002}.% of instances of the travelling salesman problem .
+%Kilby et al. showed that backbones are hard even to approximate and proposed algorithms for computing backdoors which little overlap with backbones \cite{KPS2005}.
+%and proposed algorithms for computing backdoors, that are literals/variables whose absence will simplify formulas to be solved in polynomial time %\cite{KPS2005}. As discussed by \cite{KPS2005}, backbones have little overlap with backdoors.
+%
+%
+Zhu et al, proposed an iterative SAT testing based algorithm \cite{ZWSM11,ZWM11} which is more efficient than previous model enumeration.
+%At the first step, this algorithm assigned the first model returned from SAT solver to backbone estimation, which need less memory to compute backbone.
+
+Marques-Silva et al.  investigated algorithms for computing backbones emphasizing the integration of existing algorithms which include model enumeration, iterative SAT-testing and filtering with modern SAT solvers, as well as optimisations.
+They conducted an experimental evaluation of existing techniques and showed that backbone computation for large practical formulae is feasible. \cite{MJML2010,JLMS12,JLM15}.
+%In this work, we proposed a novel Greedy-Whitening based approach \tool.
+%Experimental results demonstrated that our approach performs better than the best one of algorithms in \cite{MJML2010,JLMS12,JLM15} for industrial formulae and
+%hard random formulae, while for simple formulae, \tool is also comparable.
+
+
+
+
+
+%The algorithm maintained an estimation of backbone. In each iteration, a clause that formed by the negation of backbone estimation is added to $\Phi$. If $\Phi$ was satisfiable, it implied that at least one non-backbone literal is in the backbone estimation. Intersection between the model given by SAT solver and the backbone estimation indicates the non-backbone literal. In this way, non-backbone literal is removed, the process is repeated until $\Phi'$ is not satisfiable any longer. Along with the estimation, the clauses number of $\Phi$  is monotone increasing due to the continuously insertion in each iteration, which dramatically promote the complexity of $\Phi$. In other words, for each iteration, it takes longer CPU time than the last iteration.
+
+%Janota et al, proposed an Iterative algorithm (one test per variable) \cite{JLM15}. For each iteration, it added only one unit clause to the original formula, which made the new formula easier. Inspired by this algorithm, our approach in this paper follows this idea.
+
+%The Core Based Algorithm presented in \cite{JLM15} is stable and effectiveness. The cb100 tool, as our main comparative object, was based on this algorithm. %Instead of adding only one unit clause to the original formula, this algorithm added all the unit clause to the formula. It will dramatically accelerate SAT solving. Although there is a high possibility that the new formula is unsatisfiable, whenever there was only one literal in unsatisfiable reason of the new formula, this literal is a backbone literal. In this way, it was able to find backbone literals with little cost. In this paper, the author showed that for formulae with backbone percentages lower than 25\%, Core Based Algorithms are better.
+%significantly better. When the percentage of backbone is over 25\%, Core Based Algorithm behave very similarly Iterative SAT Testing Algorithm.
+
+
+%Kilby et al proposed \cite{KST2005} that there was little overlap between backbone and backdoors.
+
+%In \cite{KKW2001}, they partitioned backbone into inadmissible and necessary group. For inadmissible group, literals were false in each satisfying variable assignment. For necessary group, literals were true in each satisfying variable assignment. They described and compared three algorithms for searching the set of necessary and inadmissible variables, a basic iterative testing and two enhancements. The first enhancement was reusing the result of satisfiability checks to get more models for free, the second enhancement was selecting the decision variables for SAT solvers according to the previous information of inadmissible and necessary group.
+
+
+%In \cite{DOG2001}, they proposed a heuristic search for backbone, and choose this backbone variables as branch nodes for the tree developed by a DPL-type procedure. Experiments showed that a significant performance improvement over the best current algorithms, and enhanced the scalability of the algorithm up to 700 variables.
+
+%In \cite{WS2001}, they concluded the correlation of backbone size with the problem of optimization and approximation, using graph coloring, Travel Salesman, Number partition and block words planning. And they suggested that it is necessary to eliminate trivial cases of backbone before using backbone size to evaluate the hardness of optimization and approximation problems.
+

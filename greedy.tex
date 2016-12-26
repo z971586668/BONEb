@@ -1,0 +1,92 @@
+\section{Greedy-based Computing $\NBLap(\Phi)$}
+Backbone are the common parts of all implicants. Algorithm \ref{alg:greedy} is able to compute implicants of the given formula. Compared with other implicants enumeration approach, Algorithm \ref{alg:greedy} needs less SAT testing, the returning non-backbone under approximation is able to generate several implicants. Compared with implicants enumeration \cite{JLM15}, Algorithm \ref{alg:greedy} is more efficient at blocking states, since more assignments are represented.
+Experiments in \cite{JLM15} indicates that reducing SAT testing will increase performance. With more non-backbone recognized ahead without SAT testing, performance of our approach increased.
+
+In this section, we propose a Greedy-based algorithm that computes an under-approximation of non-backbone for a given formula $\Phi$.
+Although it's a rather straight forward algorithm, it is able to generate a cluster of models in $O(n^2)$.
+
+Given a formula $\Phi$ and a model $\lambda$ of $\Phi$, let $L(\Phi,\lambda)$
+denote the set $\{l\in\Lit(\Phi) \mid \lambda\models \neg l \ \mbox{or} \  \forall \phi\in\Phi, l\in\phi\Rightarrow \exists l'\in\phi\setminus\{l\}: \ \lambda\models l'\}$.
+
+
+\begin{lemma} \label{lem:navie}
+ $L(\Phi,\lambda)\subseteq\NBL(\Phi)$.
+\end{lemma}
+Intuitively, suppose $l$ is a literal in $\Lit(\Phi)$ and $\lambda$ is a model of $\Phi$.
+If $\lambda$ does not satisfy $l$, i.e.,  $\lambda\models  \neg l$, then $l$ must be a non-backbone literal of $\Phi$.
+Otherwise, if $\lambda$ satisfies $l$ and for all clauses $\phi\in\Phi$, $\phi$ either does not contain the literal
+$l$ or contains another literal $l'$ which is also satisfied by the model $\lambda$, then it is easy to see that
+the assignment $\lambda[\neg l]$ satisfies $\Phi$.
+In this case, $l$ is also a non-backbone literal.
+
+However, $L(\Phi,\lambda)$ may exclude many other non-backbone literals.
+To get more non-backbone literals, we propose the Greedy-based algorithm shown in Algorithm \ref{alg:greedy}.
+
+\begin{algorithm}
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetAlgoShortEnd
+\SetFillComment
+\Input{a satisfiable formula $\Phi$ and a model $\lambda$ of $\Phi$}
+\Output{a set of literals $\NBLap(\Phi)$}
+$\NBLap(\Phi):=L(\Phi,\lambda)$\; \label{alg1:init}
+%\Repeat{No Update}{\label{alg1:loopstart}
+\For{${\sf HS}$ from ${\sf HS}_1$ to ${\sf HS}_2$}{
+    $C:={\sf HS}(\Phi)$\;
+    $i:=0$\;
+    \While{$i<|C|$}{
+        $i:=i+1$,  $l:=C[i]$\;
+        \If{$\lambda[\neg l]\models \Phi$}
+        {
+           $\NBLap(\Phi):=\NBLap(\Phi)\cup L(\Phi,\lambda[\neg l])$\;
+           $\lambda:=\lambda[\neg l]$\;
+        }
+}
+%    }
+
+   % change the selected literal one by one to generate a new model\;
+   % add new free literals to $\NBLap$.
+    % $\Psi=\Psi\setminus\{\phi\in\Psi,\lambda(x)\models\phi, |\{l\in\phi \mid \l\models\phi\}|=2\}$\;
+    % $\Psi=\Psi\cup\{\forall\phi\in\Phi, \neg\lambda(x)\models\phi\}$\;
+    % $\lambda=\lambda[x\mapsto\neg\lambda(x)]$\;
+    % $\NBL_i(\Phi)=\NBL_i(\Phi)\cup\{x\in\Lit(\Phi) \mid \forall\phi\in\Phi: \lambda(x)\models\phi\Longrightarrow\phi\in\Psi\}$\;
+}\label{alg1:loopend}
+\Return $\NBLap(\Phi)$\;
+\caption{Greedy-based algorithm}
+\label{alg:greedy}
+\end{algorithm}
+Given a satisfiable formula $\Phi$ and a model $\lambda$ of $\Phi$,
+we assign $L(\Phi,\lambda)$ to $\NBLap(\Phi)$ at Line \ref{alg1:init}. Next, we update
+$\NBLap(\Phi)$ using two heuristic searching strategies. % to select literalsat Lines \ref{alg1:loopstart}-\ref{alg1:loopend}.
+Each heuristic searching strategy will give us an ordered set $C$ of literals, then select one literal by one literal from
+$C$. For each selected literal $l$, we construct a new assignment $\lambda[\neg l]$ from the model
+$\lambda$ and check whether  $\lambda[\neg l]$ satisfies $\Phi$ or not.
+If $\lambda[\neg l]$ satisfies $\Phi$, then we add the set of non-backbone literals $L(\Phi,\lambda[\neg l])$ into $\NBLap(\Phi)$, and
+assign $\lambda[\neg l]$ to $\lambda$ which will be severed as the model of $\Phi$ at the next step.
+Obviously,  $\NBLap(\Phi)$ is an under-approximation of non-backbone of $\Phi$.
+Notice that a literal $l$ such that $\lambda[\neg l]$ does not satisfy $\Phi$ may could be used
+later, i.e., $\lambda'[\neg l]$ does satisfy $\Phi$ for the later new model $\lambda'$. To make the algorithm efficient,
+we do not consider such literals twice in one iteration.
+
+\begin{theorem}
+$\NBLap(\Phi)\subseteq\NBL(\Phi)$.
+\end{theorem}
+
+Once, a model $\lambda$ of $\Phi$ is given, Algorithm \ref{alg:greedy} does not need to call any SAT solver which may be time-cost.
+Instead, we manage to generate new models by changing assignments of literals in the known model.
+We use the following two heuristic searching strategies to select literals. % with an order for generating new models.
+\begin{quote}
+Let $S$ be the ordered set of literals such that for every $i: 0\leq i<j<|S|$,
+$f(\Phi,S[i])\leq f(\Phi,S[j])$, where $f$ is $\Cnt$ if $i=1$, and $f=\dens$ if $i=2$.
+We define ${\sf HS}_i(\Phi)$ as the prefix sequence $S[0,xn]$ of $S$, for some $x\in[0,1]$.
+\end{quote}
+
+Intuitively, we choose the maximum $xn$ literals from the ordered set of literals.
+The idea is that if the number $\Cnt(\Phi,l)$ of occurrence of a literal $c$ is smaller,
+then the number of clauses that include the literal $l$ is smaller. This implies that the assignment $\lambda[\neg l]$ has a high probability to be a model of
+$\Phi$. From the new model $\lambda[\neg l]$, we may find new non-backbone literals.
+The intuition underlying ${\sf HS}_2(\Phi)$ is similar, in which we use densities of literals to sort literals instead of the numbers of occurrence.
+The reason is that in longer clauses, there is a high possibility that the clauses can be satisfied by another literal. The longer the clauses are, the smaller the density of literal is. Therefore, literals with smaller density are more likely to give a new model of $\Phi$.
+
+
+NOTE: Add the comparison with, without Algorithm \ref{alg:greedy} in experiments.

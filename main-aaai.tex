@@ -1,0 +1,85 @@
+\documentclass[twoside,11pt]{article}
+\usepackage{jair, theapa, rawfonts}
+\usepackage{times}
+\usepackage{helvet}
+\usepackage{courier}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{amssymb,amsmath,amsthm,amsfonts}
+\usepackage[vlined,ruled,linesnumbered]{algorithm2e}
+
+\usepackage{algpseudocode}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{color}
+\usepackage{calc}
+\usepackage{subfig}
+
+\usepackage{booktabs}
+\usepackage{multirow}
+
+
+\frenchspacing
+
+\setlength{\pdfpagewidth}{8.5in}
+\setlength{\pdfpageheight}{11in}
+
+\setcounter{secnumdepth}{1}
+
+\input{macro}
+ \begin{document}
+% The file aaai.sty is the style file for AAAI Press
+% proceedings, working notes, and technical reports.
+%
+\title{Towards Backbone Computing: A Greedy-Whitening Based Approach}
+
+%\author{Yueling Zhang \\ {\bf Min Zhang} \\ {\bf Geguang Pu} \\ Shanghai Key Laboratory of Trustworthy Computing \\ National Research Center of Trustworthy Embedded Software \\ East China Normal University, China  \\ {ylzhang, mzhang, ggpu} @sei.ecnu.edu.cn
+%Fu Song \\ School of Information Science and Technology, ShanghaiTech University \\ songfu@shanghaitech.edu.cn}
+
+\author{\name Yueling Zhang \email ylzhang@sei.ecnu.edu.cn \\
+       \name Min Zhang \email mzhang@sei.ecnu.edu.cn \\
+       \name Geguang Pu \email ggpu@sei.ecnu.edu.cn \\
+       \addr  Shanghai Key Laboratory of Trustworthy Computing
+        \\ National Research Center of Trustworthy Embedded Software
+        \\ East China Normal University, Chin
+       \AND
+       \name Fu Song \email songfu@shanghaitech.edu.cn \\
+       \addr School of Information Science and Technology
+        \\ ShanghaiTech University, China
+       \AND
+       \name Jianwen Li \email jwli@sei.ecnu.edu.cn \\
+       \addr }
+\maketitle
+
+
+\begin{abstract}
+Backbone is widely used in random SAT solving, \#SAT and planning, etc.
+In this paper, we propose a greedy-whitening based approach for computing backbone of propositional Boolean formulae.
+We present a greedy-based algorithm with two heuristic searching strategies to compute an under-approximation of non-backbone and
+a whitening-based algorithm to compute an approximation of backbone.
+The exact backbone is computed by applying iterative test backbone on the approximations.
+We implemented our approach in a tool \tool and conducted experiments on instances from Industrial tracks of SAT Competitions
+between 2002 and 2016. For industrial benchmarks, experimental results demonstrate that \tool solves as many 34 formulae as \minibones does (72 formulae in total).
+\minibones performs better on \textit{mrpp} benchmark (4\% times faster), while \tool performs better on \textit{manthey} benchmark, saving 38\% solving time.
+Experiments with 6606 small formulae generated from 86 unsatisfiable formulae indicate that \tool is able to find more backbone quicker when the structure of the formulae are more complex.
+\end{abstract}
+
+\input {intr.tex}
+\input {prel.tex}
+\input {overview.tex}
+\input {greedy.tex}
+\input {iterative.tex}
+\input {whitening.tex}
+
+\input {expr.tex}
+%\input {relw.tex}
+\input {conc.tex}
+
+%\input {algorithm_unique_satisfy.tex}
+
+
+\newpage
+\bibliography{bib}
+\bibliographystyle{jair}
+
+\end{document}

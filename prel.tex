@@ -1,0 +1,86 @@
+\section{Preliminaries}\label{sec:prel}
+
+We fix a finite set  $\X$ of \emph{Boolean variables}.
+A \emph{literal} $l$ is either a Boolean variable $x\in \X$ or its negation $\neg x$.
+The negation of a literal $\neg x$ is $x$, i.e., $\neg\neg x=x$.
+A \emph{clause} $\phi$ is a disjunction of literals $\bigvee_{i=1}^n l_i$, which may be regarded as
+the set of literals $\{l_i\mid 1\leq i\leq n\}$. W.l.o.g., we assume that for every
+clause $\phi$, if $l\in\phi$, then $\neg l\not\in \phi$.
+
+A \emph{formula} $\Phi$ over $\X$ is a Boolean combination of variables $\X$.
+We assume that formulae are given in conjunctive normal
+form (CNF), namely each formula $\Phi$ is a conjunction of clauses $\bigwedge_{i=1}^n\phi_i$ which may be regarded as a set of clauses $\{\phi_i\mid 1\leq i\leq n\}$. Given a formula $\Phi$, let $\var(\Phi)$ (resp. $\Lit(\Phi)$  and $\cls(\Phi)$) denote the set of variables (resp. literals and clauses) used in $\Phi$.
+We use $\|\Phi\|$ to denote $\sum_{\phi\in\Phi}|\phi|$.
+We use $\neg\Lit(\Phi)$ to denote the set $\{\neg l \mid l\in \Lit(\Phi)\}$.
+The \emph{size} $|\Phi|$ of $\Phi$ is the number of literals of $\Phi$.
+Given a formula $\Phi$ and a literal $l\in\Lit(\Phi)$,
+let $\Phi_{l}\subseteq \Phi$ be the set of clauses $\{\phi\in\Phi\mid l\in\phi\}$.
+%and $\Phi_\downarrow$ be the set $\{(l,\Phi_{\downarrow l})\mid l\in \Lit(\Phi)\}$.
+%Given a clause $\phi$ of $\Phi$, let $\sharp(\phi,\Phi)$ be the count of occurrence of $\phi$ in the second components of tuples in $\Phi_\downarrow$.
+%Given a set of clauses $\Phi_{l_x}$, let $\Phi_{l_x}^0 = \Phi_{\downarrow l}$, let $\Phi_{\downarrow l}^k$, $\Phi_{\downarrow l}^{k-1}\subseteq\Phi_{\downarrow l}^k\subseteq\Phi_{\downarrow 1}^{k+1}\subseteq\Phi (k \geq 1)$ be the set of clauses $\{\phi\in\Phi \mid \exists l\in\Lit(\Phi_{\downarrow l}^{k-1}), \neg l\in\Lit(\phi)\} (k \geq 1)$.
+
+%A \emph{partial assignment} is a partial function $\lambda:\X\rightarrow \{0,1\}$ which assigns to each defined variable a Boolean value. Let $\lambda_x$ denote the partial assignment such that for every $y\in \X$, $\lambda_x(y)=\lambda(x)$ if $x=y$, otherwise $\lambda_x(y)$ is undefined.
+%A \emph{complete assignment} is a partial assignment in which all the variables are defined.
+
+An \emph{assignment} is a function $\lambda: \X \rightarrow \{0,1\}$, where $1$ (resp. $0$) denotes true (resp. false).
+Given an assignment $\lambda$ and a literal $l$ that is $x$ or $\neg x$, let $\lambda[\neg l]$ be the assignment which is equal to $\lambda$
+except for $\lambda[\neg l](x)=\neg \lambda(x)$. Given a set of variables $x=\{x_1,...,x_n\}$, let $\lambda[\neg L]$ denote the assignment
+$\lambda[\neg x_1]...[\neg x_n]$.
+An assignment $\lambda$ \emph{satisfies} a formula $\Phi$, denoted by $\lambda\models \Phi$, iff assigning $\lambda(x)$ to $x$ for $x\in\var(\Phi)$ makes $\Phi$ true.
+
+\iffalse
+An assignment $\lambda$ is a \emph{model} of $\Phi$ if $\lambda\models \Phi$.
+Given two models $\lambda_1$ and $\lambda_2$ of $\Phi$, $\lambda_2$ can be \emph{generated} from $\lambda_1$, denoted by $\lambda_1\Rightarrow_\Phi\lambda_2$, if there exists a literal $l$ such that $\lambda_2=\lambda_1[\neg l]$.
+Let $\Rightarrow^*_\Phi$ denote the \emph{reflexive transitive} closure of $\Rightarrow_\Phi$.
+Formally, for every model $\lambda$ of $\Phi$, $\lambda\Rightarrow^*_\Phi\lambda$ and $\lambda_1\Rightarrow^*_\Phi\lambda_3$ if $\lambda_1\Rightarrow^*_\Phi\lambda_2$ and $\lambda_2\Rightarrow^*_\Phi\lambda_3$.
+A \emph{model cluster} $\cl_\Phi(\lambda)$ of $\lambda$ is the set of models $\{\lambda'\mid \lambda\Rightarrow^*_\Phi\lambda'\}$.
+A literal $l$ is a \emph{frozen literal} in a model $\lambda$ of $\Phi$,
+if $l$ takes the same value in all the models of $\cl_\Phi(\lambda)$. Let $\FL(\Phi,\lambda)$ denote the set of all the frozen literals
+in the model $\lambda$ of $\Phi$. %, and $\FL(\Phi)$ denote the intersection of $\FL(\Phi,\lambda)$ for all the models $\lambda$ of $\Phi$.
+\fi
+
+A formula $\Phi$ is \emph{satisfiable} iff there exists an assignment $\lambda$ such that $\lambda\models \Phi$.
+Given a formula $\Phi$, the \emph{satisfiability problem} is to decide whether $\Phi$ is satisfiable or not.
+
+\smallskip
+
+\begin{definition}[Backbone]
+\label{def:backbone}
+Given a satisfiable formula $\Phi$, a literal $l$ is a \emph{backbone literal} of $\Phi$ iff for all assignments $\lambda$ such that $\lambda\models\Phi$,
+$\lambda\models l$. The \emph{backbone} $\BL(\Phi)$ of $\Phi$ is the set of backbone literals of $\Phi$.
+\end{definition}
+
+\iffalse
+Since a backbone literal takes same value in all the models and a frozen literal takes same value in a model cluster instead of all the models,
+we get that:
+
+\begin{proposition}\label{prop:Frozen-backbone}
+For any formula $\Phi$ and model $\lambda$ of $\Phi$, $\BL(\Phi)\subseteq\FL(\Phi,\lambda)$.
+\end{proposition}
+Computing $\FL(\Phi,\lambda)$ of a given model is in polynomial time. However, the generation of the first model in each $\cl_\Phi(\lambda)$ still needs a SAT testing.
+\fi
+
+It is known that the backbone $\BL(\Phi)$ for each formula $\Phi$ is unique \cite{JLM15}.
+The backbone of an unsatisfiable formula can be defined as an empty set. Therefore, in this work, we focus on satisfiable formulae.
+We will use $\NBL(\Phi)$ to denote the set
+$\Lit(\Phi)\setminus \BL(\Phi)$.
+
+\begin{theorem}
+\label{thm:co-NP}\cite{Jan10}
+Given a satisfiable formula $\Phi$ and a literal $l$, deciding whether $l$ is a backbone literal is co-NP-complete.
+\end{theorem}
+
+\begin{definition}[Satisfied literal]
+Given a model $\lambda$ of the formula $\Phi$ and a clause $\phi\in\Phi$, for each literal $l\in\phi$, $l$ is a \emph{satisfied literal}
+of $\phi$ iff $\lambda\models l$. $l$ is a \emph{unique satisfied literal} of $\phi$ if there is no satisfied literal $l'$ of $\phi\setminus\{l\}$.
+\end{definition}
+
+Let us consider the formula $\Phi=\{\neg x_1 \vee \neg x_2, x_1, x_3 \vee x_4\}$,
+$\var(\Phi)=\{x_1, x_2, x_3, x_4\}$, $\Lit(\Phi)=\{\neg x_1, x_1, \neg x_2, x_3, x_4\}$, $\Phi_{\neg x_2}=\{\neg x_1 \vee \neg x_2\}$ and $\BL(\Phi)=\{x_1, \neg x_2\}$.
+Given a model $\lambda$ such that $\lambda(\neg x_1)=1,\lambda(\neg x_2)=0$. The satisfied literal of clause ($\neg x_1\vee\neg x_2$) is $\neg x_1$.
+
+Given a formula $\Phi$ and a literal $l$, let $\Cnt(\Phi,l)$ denote the number of occurrence of $l$ in $\Phi$.
+The \emph{density} $\dens(\Phi,l)$ of $l$ in $\Phi$ is defined as
+\[
+\dens(\Phi, l)=\frac{\Cnt(\Phi,l)}{\|\Phi_l\|}.
+\]

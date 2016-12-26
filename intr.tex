@@ -1,0 +1,17 @@
+
+
+\section{Introduction}
+The \textit{backbone} of a satisfiable formula is a set of literals that are true in all models of the formula,
+which plays an important role for understanding the hardness of problems in computation complexity.
+For instance, the presence of backbones provides a good explanation for the apparent inevitably high cost of heuristic search near the phase boundary  for satisfiability problem \cite{MZKST99}.
+
+The identification of backbone also has many practical applications. Backbone improves the performance of the random SAT solver like  WalkSAT~\cite{SBK1993} by making biased moves in a local search~\cite{ZWR2003,MAR2007}. For optimization area,  backbone can significantly contribute to the Lin-Kernighan local search algorithms for Travel Salesman Problem~\cite{ZWL2005}. Another recent successful application of backbones is post-silicon fault localisation in integrated circuits~\cite{ZWSM11,ZWM11}.
+
+However, computing backbone is co-NP hard \cite{Jan10}.  Many heuristic approaches were propose to compute backbone in different setting, such as model enumeration, iterative SAT-testing and filtering with modern SAT solvers.
+Marques-Silva et al.  conducted an experimental evaluation by integration existing algorithms with optimisations in a modern SAT solver and showed that backbone computation for large practical formulae is feasible \cite{MJML2010,JLMS12,JLM15}.
+
+
+In this paper, we propose a novel Greedy-Whitening based approach \tool for computing backbones. The insight of this approach has two-folds: 1) we present a fast procedure in to compute an under-approximation non-backbone set, which helps to prune the search space during the computation of backbone; 2) we also construct an approximation of backbone in polynomial time, and the element in this set has high possibility to be a backbone literal.
+Finally, we compute the exact backbone using SAT solvers.
+
+We implemented our approach in a tool \tool and evaluated this tool with empirical experiments. We tested 72 satisfiable industrial formulae and automatically generate 6606 formulae from 86 unsatisfiable formulae from SAT competitions\footnote{http://www.satcompetition.org/} during 2002 to 2016. In total, \tool solved 6640 more formulae, 34 from satisfiable industrial formulae and 6606 from generated formulae. \tool reduces 38\% solving time comparing to \minibones in benchmark \textit{mrpp}, and 21\% total solving time.

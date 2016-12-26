@@ -1,0 +1,18 @@
+\section{Conclusions}\label{sec:conc}
+%This paper proposes a novel greedy-whitening based approach(\tool, for short) to compute backbone of a propositional formulae.
+%\tool first computes an under-approximation of non-backbone, which can save SAT solving counts and running time of the formula.
+%Then, based on the under-approximation of non-backbone, \tool computes the over-approximation of backbone, which helps \tool to find a backbone literal %earlier.
+%Finally, \tool iteratively tests literals to see if they are backbone literals, which is inspired by Iterative Algorithm.
+
+%The experimental results show our approach is efficient, especially for industrial formulae which need longer time to compute the first model.
+%Future improvements to backbone computation algorithms include parallel approximations, automatically identification of partitions and more accurate community %structure analysis.
+
+
+%\section{Conclusion}\label{sec:conc}
+In this paper, we proposed a novel greedy-whitening based approach \tool to compute backbone of propositional formulae.
+We implemented our approach in a tool \tool. Experimental results demonstrated that both \tool and \minibones are able to solve 34 formulae from 72 formulae. 
+\tool performs better than state-of-art tool \minibones on $\textit{manthey}$ industrial benchmark selected from SAT competitions, wins at every formula and saved 38\% solving time. For the other 2 benchmarks, \minibones outperforms \tool with less 9\% solving time on $\textit{mrpp}$ benchmark, while \tool saved 2\% solving time on $\textit{dimacs}$ benchmark. \tool saved 1\% solving time on all generated formulae, for xxx benchmarks of them, \tool outperforms \minibones with less than xx\% time.
+Our experimental results demonstrated that formulae with a more complex adjacent structure (more branches near the core) performs better when applying \tool.
+
+
+
