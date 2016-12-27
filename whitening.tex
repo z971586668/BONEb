@@ -35,11 +35,10 @@ $W_v:=\{x\in \var(\Phi)\mid \lambda\models x\wedge x\not\in \Lit(\Psi\setminus W
 
 However, the result of Algorithm \ref{alg:white} may contains backbone literal. Actually, the result of Algorithm \ref{alg:white} may both contains backbone and non-backbone, also, it may fail to find some of the backbone and non-backbone.
 
-NOTE: give an example.
-Example
-Consider a formula 
+Example:
+Consider a formula
 \[(\neg a\vee b\vee\neg c)\wedge(\neg a\vee\neg b\vee c)\wedge(\neg a\vee b\vee d)\wedge(\neg c\vee d)\wedge(a\vee d)\]
-
+The result of Whitening algorithm is all variables are whiten. Actually, variable $d$ is a backbone variable. There doesn't exist a model $\lambda$ such that $\lambda(\neg d)=1$. Therefore, it's not correct to directly apply Algorithm \ref{alg:white} to backbone computing.
 
 The reason of inaccuracy of Algorithm \ref{alg:white} is as follows: at Line \ref{alg2:wc}, no clause is removed from $W_c$ in order to guarantee the termination of Algorithm \ref{alg:white}; during the change of assignment, some of the clauses doesn't has at least two satisfied literals any more, it affect the non-backbone selection.
 
@@ -148,3 +147,7 @@ the literals in $\Lit(C)$ are non-backbone literals.
 
 We adapt the algorithm from \cite{Jon75} to identify non-backbone literals from $F(\Phi,\lambda)$ and these non-backbone literals are added in $\NBLap(\Phi)$.
 This gives a more tight approximation set of backbone literals which is the desired set $\BLap(\Phi)$.
+
+
+We provided the backbone density comparison between the original formula $\Phi$ and $\BLap(\Phi)$ to show that step 2 returns a set of variables that are more likely to be backbone.
+As shown in Figure , backbone density of $\BLap(\Phi)$ are higher than the original formulae on most of the instances, no matter which benchmark it belongs. It's an empirical evidence that step 2 in our framework helped to find variables that are more likely to be backbone. 

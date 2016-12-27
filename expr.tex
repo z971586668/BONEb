@@ -1,6 +1,6 @@
 \section{Experimental Study}\label{sec:expr}
 We implemented our approach in a tool called \tool written in C++ interfacing MINISAT 2.2 \cite{MINISAT}.
-It's available at xxx.
+% It's available at xxx.
 In this section, we present the experimental results of \tool.
 There are 3 industrial benchmarks, consists of 72 industrial satisfiable formulae and 86 random benchmark, consisted 6606 generated satisfiable formulae. Each formula in an industrial benchmark is selected from verification of the same application, each formula in a random benchmark are generated from the same unsatisfiable formula. Formulae in the same benchmark share some common features, such as the number of variables and clauses, the structure of the formula and so on.
 
@@ -10,22 +10,62 @@ For industrial formulae, both \tool and \minibones are able to solve 34 formulae
 Experiments show that for \textit{mrpp} benchmark, \minibones solved 4\% times faster, and for $\textit{manthey}$ benchmark, \tool reduces 38\% solving time. \tool reduces 2183 seconds of solving time of industrial formulae, saving 21\% solving time in total.
 
 When we take a close look at the formulae that are accelerated by \tool from industrial benchmark, we found that the adjacent structure of these formulae shared some common features. Experiments show that different formula has different structures, formulae from the same benchmark often have similar structures. Compared with the ball-like structure for formulae in $\textit{mrpp}$, formulae in $\textit{manthey}$ benchmark have more star-like structures. There are two formulae in $\textit{mrpp}$ that have a pipe-like structure, where there are several branches near the main root-like core, \tool performs better on this two formula.
+
 \subsection{Benchmark Setup}
-We select 72 industrial formulae from SAT competitions, 34 are them are solved by both \tool and \minibones. We also select 100 crafted formulae from SAT competitions, none of them are solved within time and memory limits. In order to test the scalability of \tool, we generate 6606 satisfiable formulae from unsatisfiable formulae. The reason we don't choose random satisfiable formulae is because they have different community structures. Generated formulae from the same unsatisfiable formula share similar community structure from nature. We would like to explore the relationship between features of structures of the formula and the performance of \tool. Another reason is that, unlike other random formula that requires more than 500 seconds solving time, the solving time of generated formula range from 1 seconds to 100 seconds, which saved lots of solving time and make our experiments more practicable.
+We select 72 industrial formulae from SAT competitions, 34 are them are solved by both \tool and \minibones. We also select 100 crafted formulae from SAT competitions, none of them are solved within time and memory limits. Although MINISAT is not designed to solve random formulae, but both \tool and \minibones use MINISAT as their SAT solvers, we consider it fair to use random formulae to test the scalability of \tool. Instead of directly using satisfiable random formulae from SAT competitions, we generate 6606 satisfiable formulae from unsatisfiable formulae. Satisfiable random formulae in SAT competitions have different features and adjacent structures. Generated formulae from the same unsatisfiable formula share similar community structure from nature. We would like to explore the relationship between features of structures of the formula and the performance of \tool. Another reason is that, unlike other random formula that requires more than 500 seconds solving time, the solving time of generated formula range from 1 seconds to 100 seconds, which saved lots of solving time and make our experiments more practicable.
 
 There are 3 benchmarks among industrial formulae, which are $\textit{mrpp}$, $\textit{manthey}$ and $\textit{dimacs}$. The comparison between \tool and \minibones are analyzed in different benchmarks.
-For generated formulae, they are grouped into 100 benchmark since there are 100 different formulae that generate them.
+For generated formulae, they are grouped into 86 benchmark since there are 86 different formulae that generate them.
 
 We separate formulae into different benchmarks to study the effects of different adjacent structures on the performance of \tool. Adjacent structures are presented as adjacent graph of a formula. The nodes in the graph stands for variables, if two variables shared the same clause, there is an edge between them. In the graph, the more adjacent variables a variable has, the more center the variable located. In the middle of an adjacent graph, there is a ball-like core formed by variables that has multiple neighbours, if a variable has less neighbours, it will locate apart from the core, the less neighbours a variable has, the farer it located to the core.
 
 \subsection{Experimental Results on Industrial Formulae}
-The general result of industrial formulae
-SAT solving time and SAT calls of different benchmark, with different proportion.
-A line graph that describes SAT solving time comparison.
+Among the 72 industrial formulae, both \tool and \minibones are able to solve 34 of them.
+The details of solving time and SAT tests number comparison of each benchmark are shown in Table \ref{tab:ind}, we use $st$ to denote the solving time of each tool and $sc$ to denoted the SAT tests number of each tool. We can observe that \tool saved 38\% solving time compared to \minibones in $\textit{manthey}$ benchmark, with 17\% saving on SAT tests numbers. In $\textit{mrpp}$ benchmark, \minibones saved 3\% solving time and 23\% SAT tests number respectively. In total, \tool saved 27\% solving time and 4\% less SAT calls. Our experiments result prove the observation in \cite{JLM15} that less SAT calls will lead to a faster solving.
+Figure \ref{fig:ind} shows the solving time of all 34 industrial formulae, there are only 4 formulae that \minibones outperforms \tool.
+\begin{table}[t]
+\centering
+\begin{tabular}{ccccccc}
+\toprule
+ Benchmark &st of \tool(s) &st of \minibones (s) & st Difference (\%) &sc of \tool &sc of \minibones \\
+\midrule
+mrpp & 3945 & 3792 & 3 & 28261 & 21555 \\
+manthey & 2935 & 4810 & 38 & 49356 & 59562 \\
+dimacs & 1339 & 1369 & 2 & 2018 & 2022 \\
+total & 7219 & 9971 & 27 & 79635 & 82139 \\
 
-Show the density of $\BLap(\Phi)$ and the original formula, show them in line graph, they should be always higher.
+\bottomrule
+\end{tabular}
+\caption{Solving Time and SAT Tests Number Comparison on Industrial Formulae}
+\label{tab:ind}
+\end{table}
 
-Analysis the relationship between adjacent structure and the accelerating performance, give two structures as example. The ball-like one are hard for both \tool and \minibones. But \tool performs better on branch-like ones, thanks to the remove of non-backbone ahead and the high possible of backbone, all increase the chance that we hit one of the variables in the branch, and SAT solving will be rather fast. Since variables are less connected with each other and less conflicts will arise.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.3]{ind.pdf}
+   \caption{Solving Time Comparison on Industrial Formulae}
+   \label{fig:ind-time}
+\end{figure}
+
+
+In order to dig the underlying reason that why \tool outperforms \minibones in $\textit{manthey}$ benchmark, we consider the structure feature of the given formula. Formulae in the same benchmark share common feature in the structure, it's because that a specific application always has its own pattern when encoded into satisfiable problem. We explore the adjacent structure of the formulae in a given benchmark, we found that $\textit{manthey}$ have a star-like adjacent structure as shown in \ref{fig:star}. It means that variables in the given formula in $\textit{manthey}$ are separated into several groups. Inside the groups, variables are connected tightly, perhaps one variable is adjacent to every other variable in the group. Connections between groups are loosen, only a few variables adjacent to another variable outside the group. Experiments show that \tool performs better on the star-like formula.
+\begin{figure}
+\centering \includegraphics[scale=0.3]{star.png}
+\caption{Adjacent Structure of manthey}\label{fig:star}
+\end{figure}
+
+On the other hand, the adjacent structure of formulae in $\textit{mrpp}$ are more like a football as shown in \ref{fig:ball}. All variables have a large amount of adjacent variables, and they are almost connected to each other. It's hard to find a variable that only has a few adjacent variables. However, there are 2 special formula in $\textit{mrpp}$ that has several group of variables that are less connected as shown in \ref{fig:mrpp_s}, it looks like there are several by-passes around the center core. experiments show that, \tool outperforms \minibones on these 2 formula.
+\begin{figure}
+\centering \includegraphics[scale=0.3]{ball.png}
+\caption{Adjacent Structure of mrpp}\label{fig:mrpp}
+\end{figure}
+\begin{figure}
+\centering \includegraphics[scale=0.3]{mrpp_s.png}
+\caption{Adjacent Structure of special mrpp}\label{fig:mrpp_s}
+\end{figure}
+
+Based on the observation, we concluded that \tool is better at solving formula that variables can be separated into less connected groups, such a star adjacent structure or a structure with a center and several branches or by-passes.
 
 
 SAT solving time and SAT calls of different benchmark, only with Algorithm 1.
@@ -33,44 +73,6 @@ The same table and analysis for Algorithm 2. a table with 1, 2, 1+2.
 A general comparison result about Algorithm 1 and Algorithm 2.
 The results show that for formulae in $\textit{manthey}$, the combination is the best. The contribution is almost the same.
 For $\textit{mrpp}$, the combination is not the best solution, this explains why our algorithm performs poorly on this benchmark, one step of the computing doesn't behaves well. It's because that the formula in this benchmark are hard to test whether a literal is a backbone,(seen the gap between the first model solving time and the total solving time). The reason for this is because the variables here shared a very tight relations, it will causes lots of conflicts by mis-assignement any of them.
-
-
-\begin{table}[t]
-\centering
-\begin{tabular}{ccccc}
-\toprule
- &Total  Time (s) & SAT Calls&Average Time (s)\\
-\midrule
-\tool&26663  &272089&0.9890  \\
-cb100&30295  &239112&1.0174  \\
-\bottomrule
-\end{tabular}
-\caption{Experimental results for 138 industrial formulae}
-\label{tab:ind}
-\end{table}
-
-Table \ref{tab:ind} shows the overview of experimental results on industrial formulae.
-Among all the 388 industrial formulae, there are 138 formulae that both \tool and \textit{cb100} were able to compute backbone within 1800s.
-Although, the number of SAT calls used by \tool is greater than \textit{cb100}, \tool reduces by 12\% of the total running time and by 11\% of the average running time for each SAT call.
-
-Figure \ref{fig:ind-time} provides the details of experimental results on industrial formulae, including the running time of the SAT solver for generating the first model and total running time for each formula.
-The red dotted line represents for the time used by the SAT solver for computing the first model, which indicates the hardness of the formula.
-Lines with crosses represents for the running time of \tool, and lines with boxes represents for the running time of \textit{cb100}. There is a correlation between the hardness of formulae the performance of \tool comparing to \textit{cb100}.
-For most of hard formulae, \tool outperforms \textit{cb100} in terms of total running time and average time of each SAT solver call. This demonstrates that \tool is more feasible for computing backbone of hard formulae.
-
-%\textit{cb100} highly rely on the quality of model returned by SAT solver, it performances better when SAT solver gave it a suitable model. For most of the formulae that need less than 1 second to compute a first model, both \tool and \textit{cb100} were able to compute backbone very quickly with barely difference.
-
-Table \ref{tab:ind} and Figure \ref{fig:ind-time} demonstrate that \tool outperforms \textit{cb100} on industrial formulae.
-
-
-\begin{figure}
-    \centering
-    \includegraphics[scale=0.8]{ind2.pdf}
-   \caption{Experimental results on industrial formulae}
-   \label{fig:ind-time}
-\end{figure}
-
-
 
 \section{Results for Generated Formulae}
 How many solving time saved in total, what proportion.
@@ -97,6 +99,19 @@ For formulae generated from an unsatisfiable formula with a very sharp community
 For formulae generated from an unsatisfiable formula with a ball-like structure, both \tool and \minibones need almost more than 20 seconds to solve. This indicates that ball-like structure are hard to complex backbone. If we compare the solving time of first model between type I and type II, we can find that it's more changeling for MINISAT to solve type II, because there is no short-cut to find a good assignment quickly.
 For the rest of formula, a core with multiple branches around the core, \tool performs better than \minibones on most of the generated formulae.
 
+
+\begin{figure}
+\centering \includegraphics[scale=0.5]{uuf250-090.png}
+\caption{}\label{}
+\end{figure}
+\begin{figure}
+\centering \includegraphics[scale=0.5]{uuf070.png}
+\caption{}\label{}
+\end{figure}
+\begin{figure}
+\centering \includegraphics[scale=0.5]{uuf030.png}
+\caption{}\label{}
+\end{figure}
 
 
 

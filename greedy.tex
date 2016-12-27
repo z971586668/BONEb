@@ -41,15 +41,7 @@ $\NBLap(\Phi):=L(\Phi,\lambda)$\; \label{alg1:init}
            $\NBLap(\Phi):=\NBLap(\Phi)\cup L(\Phi,\lambda[\neg l])$\;
            $\lambda:=\lambda[\neg l]$\;
         }
-}
-%    }
-
-   % change the selected literal one by one to generate a new model\;
-   % add new free literals to $\NBLap$.
-    % $\Psi=\Psi\setminus\{\phi\in\Psi,\lambda(x)\models\phi, |\{l\in\phi \mid \l\models\phi\}|=2\}$\;
-    % $\Psi=\Psi\cup\{\forall\phi\in\Phi, \neg\lambda(x)\models\phi\}$\;
-    % $\lambda=\lambda[x\mapsto\neg\lambda(x)]$\;
-    % $\NBL_i(\Phi)=\NBL_i(\Phi)\cup\{x\in\Lit(\Phi) \mid \forall\phi\in\Phi: \lambda(x)\models\phi\Longrightarrow\phi\in\Psi\}$\;
+    }
 }\label{alg1:loopend}
 \Return $\NBLap(\Phi)$\;
 \caption{Greedy-based algorithm}
@@ -87,6 +79,3 @@ then the number of clauses that include the literal $l$ is smaller. This implies
 $\Phi$. From the new model $\lambda[\neg l]$, we may find new non-backbone literals.
 The intuition underlying ${\sf HS}_2(\Phi)$ is similar, in which we use densities of literals to sort literals instead of the numbers of occurrence.
 The reason is that in longer clauses, there is a high possibility that the clauses can be satisfied by another literal. The longer the clauses are, the smaller the density of literal is. Therefore, literals with smaller density are more likely to give a new model of $\Phi$.
-
-
-NOTE: Add the comparison with, without Algorithm \ref{alg:greedy} in experiments.
