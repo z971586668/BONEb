@@ -1,55 +1,53 @@
 \section{Whitening-based Computing $\BLap(\Phi)$}
-In this section, we use $\NBLap(\Phi)$ to compute more non-backbone literals and approximation $\BLap(\Phi)$ of backbone. We fix the satisfiable formula $\Phi$. $\BLap(\Phi)$ is a set of literals with high possibility to be backbone. ll approaches to test backbone requires a SAT testing. Suppose we just use pure iterative SAT testing \cite{JLM15} for the rest of $k$ unknowing variables without computing $\BLap(\Phi)$. Once a backbone is found from testing, it will prune the searching space in the solving of the formula. Rest of testing benefit from this. If a non-backbone is found, no searching spaces will be pruned, no benefit is provided. Therefore, the earlier we test a backbone literal, the more benefits provided from the literal.
 
-Backbone are the essential variables of a formula. In SAT solving, conflicts will always arise at the end of a search if the assignment of a backbone literal is not suitable. Same situation happened in graph coloring problem, a graph can't be k-colored if the essential nodes are not colored properly.
+In this section, we propose an algorithm to compute approximation of backbone literals $\BLap(\Phi)$, namely Whiten-based Algorithm. As mentioned in Section \ref{sec:overview}, $\BLap(\Phi)$ is able to provide more useful information for computing backbone, since known backbones may help accelerate computing the rest of backbones. The total computation process benefits from backbones that are computed at the beginning. Variables in $\BLap(\Phi)$ have higher possibilities to be backbone, testing variables from $\BLap(\Phi)$ first helps providing the benefits sooner. Experiments show that the proportions of backbone in $\BLap(\Phi)$ are generally higher then it in the original formula. Moreover, 20\% solving time is saved by Whiten-based Algorithm, more specific data is shown in Section \ref{sec:ind_expr}.
 
-\cite{Par03} proposed an Whitening algorithm which was supposed to determine nodes that always have the same color in all legal colorings of the coloring problem. Since computing backbone is a co-NP problem and graph coloring is a NP problem, we are able to apply Whitening Algorithm in backbone computing.
-However, Whitening Algorithm was designed to prove those non-white nodes are essential in coloring. Therefore, the result variables are not always non-backbone.
-Algorithm \ref{alg:white} shows Whitening Algorithm in backbone computing. It tries to rule out non-essential variables (non-backbone).
+\subsection{Whitening Algorithm}
 
-Given a satisfiable formula $\Phi$ and a model $\lambda$ of $\Phi$,
-Algorithm \ref{alg:white} computes non-essential literals by generating new models from $\lambda$ without a SAT test.
-Algorithm \ref{alg:white} first computes a set of clauses $W_c$ that have at least two satisfied literals and a set of literals $W_l$ that only satisfy $W_c$, i.e., $\forall l\in W_l, \lambda(l)=1\wedge \Phi_l\subseteq W_c$. Institutively, $W_l$ equals to $L(\Phi,\lambda)$ at this step.
+Given a formula $\Phi$, a variable $v\in\var(\Phi)$ is either a backbone variable or a non-backbone variable. We consider backbone variables as essential variables, since no models can be returned if the assignment of backbone literal is not $1$. There is a similar situation in graph coloring problem, while essential variables are nodes that can't be colored with white without changing the color of adjacent nodes.
 
-Started from Line \ref{alg2:loop}, Algorithm \ref{alg:white} iteratively extend $W_c$ and $W_v$. A clause is added to $W_v$ if it contains at least one literal $l$ that $\neg l\in W_l$. $W_v$ is extended accordingly. Suppose a clause $\phi\notin W_c$ contains $l_1$, such that $\neg l_1\in W_l$. Since for all clauses that contains $\neg l_2$, there exists another literal that also satisfies that clause, therefore, $\lambda[\neg l_1]$ is another model of $\Phi$. $\phi$ will be added to $W_c$ at Line \ref{alg2:inital} if the given model is $\lambda[\neg l_1]$.
+In \cite{Par03}, the author proposed an Whitening algorithm that computed the essential nodes in a coloring problem named Whitening Algorithm. We propose a Whitening Algorithm for essential variables computing based on the original one. We use $W_c$ to denote the clauses that have at least two satisfied literals to a given model. We use $W_v$ to a set of variables, which only satisfied clauses in $W_c$. $W_c$ and $W_v$ are updated concurrently.
 
-\begin{algorithm}
+\begin{algorithm2e}
 \SetKwInOut{Input}{Input}
 \SetKwInOut{Output}{Output}
 \SetAlgoShortEnd
 \SetFillComment
 \Input{a formula $\Phi$ and a model $\lambda$ of $\Phi$}
 \Output{white clauses $W_c$ and white variables $W_v$}
-$W_c:= \{\phi\in\Phi \mid \exists l_1,l_2\in\phi: \ \lambda\models l_1\wedge l_2\}$\; \label{alg2:inital}
+$W_c:= \{\phi\in\Phi \mid \exists l_1,l_2\in\phi: \  \lambda\models l_1\wedge l_2\}$\; \label{alg2:c}
 $W_v:=\{x\in \var(\Phi)\mid \lambda\models x\wedge x\not\in \Lit(\Psi\setminus W_c),
-        \ \lambda\models \neg x\wedge \neg x\not\in \Lit(\Psi\setminus W_c)\}$\;
+        \ \lambda\models \neg x\wedge \neg x\not\in \Lit(\Psi\setminus W_c)\}$\; \label{alg2:v}
 \Repeat{No Update of $W_c$ and $W_v$}{ \label{alg2:loop}
-   $W_c := W_c \cup \{\phi\in\Phi \mid \var(\phi)\cap W_v\neq \emptyset \}$\; \label{alg2:wc}
+   $W_c := W_c \cup \{\phi\in\Phi \mid \var(\phi)\cap W_v\neq \emptyset \}$\; \label{alg2:cadd}
    $W_v := W_v \cup \{x\in \var(\Phi)\mid \lambda\models x\wedge x\not\in \Lit(\Psi\setminus W_c),
         \ \lambda\models \neg x\wedge \neg x\not\in \Lit(\Psi\setminus W_c)\}$
 }
-\Return $(W_c, W_v)$\;
+\Return $\var(\Phi)\setminus W_v$\;
 \caption{Whitening algorithm}
-\label{alg:white}
-\end{algorithm}
+\label{alg:whitening}
+\end{algorithm2e}
 
-However, the result of Algorithm \ref{alg:white} may contains backbone literal. Actually, the result of Algorithm \ref{alg:white} may both contains backbone and non-backbone, also, it may fail to find some of the backbone and non-backbone.
+We first compute a set of clauses that have at least two satisfied literals under the current model, named $W_c$ at Line \ref{alg2:c}. We find variables that only satisfied clauses in $W_c$, and put them into a set of variables, named $W_v$ at Line \ref{alg2:v}. We then start to iteratively extend $W_c$ and $W_v$ from Line \ref{alg2:loop}. For every variable $v\in W_v$, if a clause contains $\neg v$, it will be added to $W_c$ at Line \ref{alg2:cadd}. After that, we compute $W_v$ again with the extended $W_c$. We repeat the procedure until no more clauses are added to $W_c$. At last, the complement of $W_v$ is the set of essential variables. It's important that no elements are taken away from $W_c$, the algorithm will terminate since the number of clauses is finite.
 
-Example:
-Consider a formula
+Given a model $\lambda$, the complexity of Whitening Algorithm is polynomial since it doesn't need to compute another exact model of the given formula. For any variable $v\in W_v$, all clauses in $\Phi_{\neg v}$ will have at least two satisfied literals in the assignment $\lambda[\neg v]$, one is $\neg v$, the other is one of the satisfied literals of $\phi$ under $\lambda$. In this way, Whitening Algorithm extended $W_c$ without SAT testing.
+
+However, some of the backbone variables are not in the set of essential variables. It's because that different model has different essential variables. Limited by the only model given to Whitening Algorithm, part of the essential variables of the formula are missing from the result. For example, given a formula
 \[(\neg a\vee b\vee\neg c)\wedge(\neg a\vee\neg b\vee c)\wedge(\neg a\vee b\vee d)\wedge(\neg c\vee d)\wedge(a\vee d)\]
-The result of Whitening algorithm is all variables are whiten. Actually, variable $d$ is a backbone variable. There doesn't exist a model $\lambda$ such that $\lambda(\neg d)=1$. Therefore, it's not correct to directly apply Algorithm \ref{alg:white} to backbone computing.
+and a model $a\wedge b\wedge c\wedge d$. The result of Whitening Algorithm is empty set. It indicates that non of the variable is backbone. Actually, $d$ is a backbone variable, since there does not exist a model $\lambda$ that $\lambda(\neg d)=1$.
 
-The reason of inaccuracy of Algorithm \ref{alg:white} is as follows: at Line \ref{alg2:wc}, no clause is removed from $W_c$ in order to guarantee the termination of Algorithm \ref{alg:white}; during the change of assignment, some of the clauses doesn't has at least two satisfied literals any more, it affect the non-backbone selection.
+At the first iteration, $\neg a\vee b\vee d$ and $a\vee d$ are selected into $W_c$, and only $a$ is selected into $W_v$. At the second iteration, $\neg a\vee b\vee \neg c$ and $\neg a\vee\neg b\vee c$ are added to $W_c$ since they contains $\neg a$. $b$ and $c$ are added to $W_v$ at next step, since it only satisfies clauses in $W_c$. All clauses are added to $W_c$ since $\neg c\vee d$ is in $W_c$ now. It ends up with all variables are added to $W_v$.
 
-To fix this problem, we record the current assignment at each iteration and check the satisfiability of it in polynomial time. The algorithms are shown in Algorithm \ref{alg:ewhite}. At Line \ref{alg3:loopstart}, we start to extend $W_l$ and $W_c$.
-We iteratively change the assignment of $l_i\in W_l$, generating a group of models $\lambda[\neg l_i]$, and try to find another non-backbone $l'$ with $\lambda[\neg l_i]$.
-We use \Pre(l) to record the literals that has changed assignments before adding $l'$ to $W_l$.
-For every literal $l$ in $W_l$, the clauses $\phi\in\Phi_{\neg l}$ that contains $\neg l$ are added to $W_c$. Given a model $\lambda[\neg l]$, all clauses that contains $\neg l (i.e. \Phi_{\neg l})$ have at least two satisfied literals, one is $\neg l$, the other is one of the satisfied literals of model $\lambda$ (because the only difference between $\lambda$ and $\lambda[\neg l]$ is the assignment of $l$, the other assignments remains the same).
-Meanwhile, $W_l$ will be extended since there are more generated models. Algorithm \ref{alg:ewhite} will eventually terminate because both $W_l$ and $W_c$ keep increasing, they will stop extension and remain the same after several generations.
-At Line \ref{alg3:test}, we test whether the current assignment generated from \Pre(l) is a model. The test will be finished in P-time, without calling a SAT solver. The assignment $\lambda[\neg (\Pre(l)\cup \{l\})]$ may not be a model because $W_c$ does not shrink together with the change of the assignments. For instance, if a clause only has two satisfied literals $l_1,l_2$, after two iterations started from Line \ref{alg3:loopstart}, both $l_1$ and $l_2$ are assigned to 0, the assignments of the rest literals remain the same, then $\lambda[\neg l_1,\neg l_2]$ is no longer a model of the given formula.
+Given a model $\lambda$, the assignment change of a given variable $v$ is generating a new assignment $\lambda[\neg v]$. As we record the assignments generated during the compute step by step, we found that $a$ is a non-backbone variable, because $\neg a\wedge b\wedge c\wedge d$ is another model. $b,c$ are non-backbone variables because $\neg a\wedge \neg b\wedge c\wedge d$ and $\neg a\wedge b\wedge \neg c\wedge d$ are models of the given formula. However, neither $\neg a\wedge \neg b\wedge c\wedge \neg d$ nor $\neg a\wedge b\wedge \neg c\neg d$ is a model of the given formula.
 
-\begin{algorithm}
+\medskip
+
+\subsection{Assignments Checking Based Whitening Algorithm}
+
+To avoid missing backbone variables like $d$, we propose a Whitening-based Algorithm to compute the approximation of backbone variables with satisfiability check at each assignment generation. $\Pre(x)$ is used to record the variables that have changed its assignment at each iteration. With the changed variables, we generate a new assignment at each iteration. We choose a variable $x\in W_v$ at each iteration, and update $W_c$ by adding all clauses that contains $\neg x$. $W_v$ is extended accordingly. For every new variables $x'$ in $W_v$, we test the satisfiability of assignment $\lambda[\neg (\Pre(x)\cup\{x,x'\})]$. $x'$ maintains in $W_v$ if a new model is found, otherwise, it's removed from $W_v$. Algorithm stops when there is no new clauses added to $W_c$ and all variables in $W_v$ are chosen.
+
+
+\begin{algorithm2e}
 \SetKwInOut{Input}{Input}
 \SetKwInOut{Output}{Output}
 \SetAlgoShortEnd
@@ -57,39 +55,49 @@ At Line \ref{alg3:test}, we test whether the current assignment generated from \
 \Input{a satisfiable formula $\Phi$ and a model $\lambda$ of $\Phi$}
 \Output{a set of literals $\NBLap(\Phi)$}
 $W_c:=\{\phi\in\Phi\mid \exists l_1,l_2\in\phi: \lambda\models l_1\wedge l_2\}$\;\label{alg3:l1}
-$W_l:=\{\lambda(l)=1\mid \forall\phi\in\Phi_l: \phi\in W_c\}$\; \label{alg3:l2}
-$\forall l\in W_l, \Pre(l)=\emptyset$\;
+$W_v:=\{x\in\var(\Phi) \mid \lambda(x)=1 \forall\phi\in\Phi_x: \phi\in W_c\}$\; \label{alg3:l2}
+$\forall \in W_v, \Pre(l)=\emptyset$\;
 \Repeat{No update of $W_l$}{ \label{alg3:loopstart}
-    \For{$l\in W_l$}{
-        \For{$\phi\in\Phi_{\neg l}$}{
+    \For{$x\in W_v$}{
+        \For{$\phi\in\Phi_{\neg x}$}{
             $W_c:=W_c\cup\phi$\;
         }
-        \For{$l'\notin W_l\wedge l'\in\Phi_{\neg l}$}{
-            \If{$\forall\phi'\in\Phi_{l'}: \phi'\in W_c$}{
-                \If{$\lambda[\neg (\Pre(l)\cup \{l\})]\models\Phi$}{ \label{alg3:test}
-                    $W_l:=W_l\cup l'$\;
-                    $\Pre(l'):=\Pre(l)\cup l$\;
+        \For{$x'\notin W_v\wedge x'\in\Phi_{\neg x}$}{
+            \If{$\forall\phi'\in\Phi_{x'}: \phi'\in W_c$}{
+                \If{$\lambda[\neg (\Pre(x)\cup \{x,x'\})]\models\Phi$}{ \label{alg3:test}
+                    $W_v:=W_v\cup x'$\;
+                    $\Pre(x'):=\Pre(x)\cup x$\; \label{alg3:record}
                 }
             }
         }
     }
 }\label{alg3:loopend}
-$\NBLap:=W_l$\;
-\Return $\NBLap(\Phi)$\;
-\caption{Whitening-based algorithm}
+\Return $\var(\Phi)\setminus W_v$\;
+\caption{Whitening-based Algorithm with Assignment Satisfiability Checking}
 \label{alg:ewhite}
-\end{algorithm}
+\end{algorithm2e}
+
+We compute $W_c$ and $W_v$ as usual at the first two lines, and extend $W_c$ and $W_v$ at Line \ref{alg3:loopstart}. At Line \ref{alg3:test}, we test whether the generated assignment is a model of the given formula in polynomial time. At each iteration, $x$ is the variable that changed assignment, $x'$ is a variable that not in $W_v$ yet. If the assignment passes the satisfiability at Line \ref{alg3:test}, $x'$ is added to $W_v$, and $\Pre(x')$ is $\Pre(x)\cup \{x\}$.
+
+The Whitening-based Algorithm find some missing backbone variables in Whitening Algorithm. Since the test of satisfiability at Line \ref{alg3:test} is in polynomial time, the time complexity remains the same.
+
+\begin{theorem}
+$\forall x\in W_v$, $x\in\NBLap(\Phi)$.
+\end{theorem}
+
+\begin{proof}
+Given a formula $\Phi$ and a model $\lambda\models\Phi$. At Line \ref{alg3:test}, a new model is generated after testing $\lambda[\neg \Pre(x)\cup \{x,x'\}]$. It means that there exists two models, $\lambda,\lambda'$, such that $\lambda(x')=1$ and $\lambda'(\neg x')=1$. $x'$ is a backbone variable.
+\end{proof}
+\medskip
 
 
+\iffalse
+\subsection{Dependency Graph Based Whitening Algorithm}
 
-However, the set $F(\Phi,\lambda)$ also contains non-backbone literals. We propose another heuristic strategy to remove non-backbone literals from $F(\Phi,\lambda)$.
+However, there are also some over-lapping between backbone approximation and non-backbone variables. We propose another heuristic strategy to remove parts of non-backbone literals from backbone approximation.
 
-Our strategy is based on the observation of the relationship between $W_c(\Phi,\lambda)$ and backbone literals.
-Consider the formula $\Phi=(a\vee\neg b)\wedge(b\vee\neg c)\wedge(c\vee\neg a)$ and the model $\lambda$ such that $\lambda(a)=\lambda(b)=\lambda(c)=1$. The backbone of the formula $\Phi$ is $\emptyset$, because the assignment $\lambda'$ such that $\lambda'(a)=\lambda'(b)=\lambda'(c)=0$ is also a model of $\Phi$.
-However, by Algorithm \ref{alg:whitening},
-$W_v(\Phi,\lambda)=\emptyset$, from which we get that $F(\Phi,\lambda)=\Lit(\Phi)$. To remove the non-backbone literals $a, \ b, \ c, \ \neg a, \ \neg b$ and  $\neg c$
-from $F(\Phi,\lambda)$,  we introduce a dependency graph to characterize such literals $a, \ b, \ c, \ \neg a, \ \neg b$ and  $\neg c$ from  the given formula $\Phi$.
-
+Consider a formula $\Phi=(a\vee\neg b)\wedge(b\vee\neg c)\wedge(c\vee\neg a)$ and a model $\lambda$ $a\wedge b\wedge c$. The backbone of the formula $\Phi$ is $\emptyset$, because the assignment $\lambda'$ such that $\lambda'(a)=\lambda'(b)=\lambda'(c)=0$ is also a model of $\Phi$.
+However, by Algorithm \ref{alg:ewhite}, $W_v=\emptyset$, all variables are in backbone approximation. To remove the non-backbone variables $a, \ b, $ and $c$ from the approximation of backbone, we introduce a dependency graph to characterize such literals $a, \ b, \ c, \ \neg a, \ \neg b$ and  $\neg c$ from  the given formula $\Phi$.
 
 Given a formula $\Phi$, the \emph{dependency graph} $G_\Phi$ of $\Phi$ is a directed graph $(V,E)$, where
 $V=\Lit(\Phi)$ is a finite set of vertices, and $E\subseteq V\times \Phi\times V$ is a finite set of labeled edges such that
@@ -147,7 +155,54 @@ the literals in $\Lit(C)$ are non-backbone literals.
 
 We adapt the algorithm from \cite{Jon75} to identify non-backbone literals from $F(\Phi,\lambda)$ and these non-backbone literals are added in $\NBLap(\Phi)$.
 This gives a more tight approximation set of backbone literals which is the desired set $\BLap(\Phi)$.
+\fi
+
+\subsection{Computing Parts of Exact Backbone Using Assumptions}
+
+Although Whitening-based Algorithm is able to compute an approximation set of backbone and accelerate backbone computing, it still needs at least one SAT testing to determine a variable is backbone. Inspired by \cite{JLM15}, we add a heuristic strategy to check whether a literal is a backbone using SAT testing with assumptions.
+
+Experiments show that given the same formula $\Phi$, SAT testings with assumptions are generally faster then the ones without assumptions. It's because that assumptions help to make the initial decisions of a SAT solving, given an assumption $\gamma$ with k literals in it, it reduces $2^k$ states of the searching spaces. SAT testing with a longer assumptions will returned faster.
+
+We use $(b, \lambda, r)$ to denote the result of $SAT(\Phi,\gamma)$, where $b$ stands for the satisfiability of $\Phi$ under assumption of $\gamma$. If $b$ is assigned to $1$, a model is returned in $\lambda$, otherwise, a reason of unsatisfiable is returned in $r$. We use $\BLap(\Phi)$ to construct $\gamma$, for every literal $l\in\BLap(\Phi)$, $\neg l$ is selected to $\gamma$.
+If there is exactly one reason $l_b$ returned from $SAT(\Phi,\gamma)$, it indicates there doesn't exist a model $\lambda$ such that $\lambda(l_b)=1$. Since $\Phi$ is satisfiable, $\neg l_b$ must be a backbone of $\Phi$.
 
 
-We provided the backbone density comparison between the original formula $\Phi$ and $\BLap(\Phi)$ to show that step 2 returns a set of variables that are more likely to be backbone.
-As shown in Figure , backbone density of $\BLap(\Phi)$ are higher than the original formulae on most of the instances, no matter which benchmark it belongs. It's an empirical evidence that step 2 in our framework helped to find variables that are more likely to be backbone. 
+\begin{algorithm2e}
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetAlgoShortEnd
+\SetFillComment
+\Input{a satisfiable formula $\Phi$ and $\BLap(\Phi)$}
+\Output{under-approximation of backbone literals $\BLapu(\Phi)$ }
+$\BLapu(\Phi):=\emptyset$\;
+$\gamma:=\{l\in\Lit(\Phi) \mid \neg l\in\BLap(\Phi)\}$\; \label{alg4:init}
+\Repeat {$\gamma==\emptyset$}{
+    $(b, \lambda', r):=SAT(\Phi,\gamma)$\; \label{alg4:test}
+    \If {$b==0$}{
+        \If {$|r|==1$}{
+            $l_b\in r$\;
+            $\BLapu(\Phi):=\BLapu(\Phi)\cup \{\neg l_b\}$\; \label{alg4:bl}
+        }
+        $\gamma=\gamma\setminus r$\; \label{alg4:cut}
+    }
+    \If{$b==1$}{
+        $\BLap(\Phi):=\BLap(\Phi)\setminus\gamma$\; \label{alg4:remove}
+        break\;
+    }
+}
+\Return $\BLapu(\Phi)$\;
+\caption{Computing under-approximation of backbone $\BLapu(\Phi)$}
+\label{alg:assum}
+\end{algorithm2e}
+
+We initialize $\gamma$ with $\BLap(\Phi)$ at Line \ref{alg4:init}. For every literal $l\in\BLap(\Phi)$, $\lambda(l)=1$, if we assign $\BLap(\Phi)$ to $\gamma$ directly, the result must be satisfiable since at least $\lambda$ satisfy all the assumptions in $\gamma$. Therefore, we add $\neg l$ to $\gamma$ for every $l\in\BLap(\Phi)$ to block the known model $\lambda$. At Line \ref{alg4:test}, we test the satisfiability of $\Phi$ under the assumption $\gamma$. $b$ is assigned to $1$ if $SAT(\Phi,\gamma)$ is satisfiable, then, all literals in $\gamma$ will be removed from $\BLap(\Phi)$ at Line \ref{alg4:remove}. If $\Phi$ is not satisfiable any more under the assumption of $\gamma$ ($b==0$), a reason set is returned in $r$. If there is exactly one literal $l_b$ in $r$, $\neg l_b$ must be backbone and added to $\BLapu(\Phi)$ at \ref{alg4:bl}. $\gamma$ is iteratively reducing at Line \ref{alg4:cut}, once $\gamma$ is empty, the iteration stops. Therefore, algorithm terminates since the length of $\gamma$ is finite.
+
+\begin{theorem}
+Given a formula $\Phi$ and a set of assumptions $\gamma$, $l\in\gamma$ is a backbone of $\Phi$ if $l$ is the only reason that $\Phi$ is not satisfiable under the assumption of $\gamma$
+\end{theorem}
+
+\begin{proof}
+Given a formula $\Phi$, a model $\lambda\models\Phi$, an assumption $\gamma$, a literal $l_b\in\gamma$. $SAT(\Phi,\gamma)$ is not satisfiable means that there doesn't exist a model $\lambda'$ such that for every literal $l\in\gamma$, $\lambda(l)=1$. Suppose $l_b$ is the only unsatisfiable reason of $SAT(\Phi,\gamma)$, it indicates that $SAT(\Phi, \{l_b\})$ is not satisfiable. Obviously, adding a clause with only one literal $l_b$ in it is equivalent to $SAT(\Phi,\{l_b\})$, therefore, $\Phi\wedge l_b$ is not satisfiable, there doesn't exist a model $\lambda'$ such that $\lambda'(l_b)=1$. Since $\Phi$ has a model $\lambda$, where $\lambda(\neg l_b)=1$, $\neg l_b$ is a backbone of $\Phi$.
+\end{proof}
+
+Whitening-based Algorithm is able to compute the approximation of backbones of the given formula. To a part of variables, Whitening-based saved solving time when determining if a variable is a backbone. Experiments show that, SAT testings with assumptions are generally finished within 1 second, while original SAT testing may take more than 1 minute. Compared with the original Whitening Algorithm, the accuracy of Whitening-based Algorithm improved by two heuristic strategies has increased. Missing backbone are added to the approximation through the assignment checking strategy and accurate backbone are confirmed with assumption strategy. With a higher accuracy, backbone computing are guided better with $\BLap(\Phi)$.

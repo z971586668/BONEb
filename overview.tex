@@ -1,4 +1,4 @@
-\section{Overview of our Approach}\label{sec:walg}
+\section{Overview of our Approach}\label{sec:overview}
 \begin{figure*}[t]
    \includegraphics[scale=0.75]{Framework}
   \hspace*{50mm} \includegraphics[scale=0.75]{Fig-backbone}
@@ -11,23 +11,31 @@ $\Phi$ as an input, \tool first computes an under-approximation $\NBLap(\Phi)\su
 $\Phi$. Then, \tool computes an approximation $\BLap(\Phi)$ of the backbone of $\Phi$ based on the set $\NBLap(\Phi)$, where each literal $l\in \BLap(\Phi)$ has a high possibility to be a backbone literal of $\Phi$.
 Finally, \tool removes non-backbone literals from $\BLap(\Phi)$ and adds backbone literals into $\BLap(\Phi)$ to compute the exact backbone of $\Phi$.
 
+As shown in Figure \ref{flow}, $\NBLap(\Phi)$ is only contains non-backbone literals, there are still other non-backbone literals that are not in $\NBLap(\Phi)$.
+$\BLap(\Phi)$ contains both backbone literals and non-backbone literals, but most of the literals in $\BLap(\Phi)$ are backbone literals. There may exists overlapping between $\NBLap(\Phi)$ and $\BLap(\Phi)$.
+In iterative testing (step 3), experiments show that solving time are saved by test the literals in $\BLap(\Phi)$ first, since it's more likely to test more backbone literals first. With more known backbone literals, SAT testings are accelerated.
+
 \medskip
 \noindent{\bf Computing an under-approximation of non-backbone.}
 Given a satisfiable formula $\Phi$, we first compute a model $\lambda$ of $\Phi$ by calling a SAT solver.
 From the model $\lambda$, we compute a base under-approximation of non-backbone.
 Later, we apply a Greedy-based algorithm to add more non-backbone literals into the base under-approximation, which results in the
-under-approximation $\NBLap(\Phi)$. Inspired by Janto, \cite{JLM15}, who use MINISAT assumptions to find backbone literals. We apply the complementing of $\NBLap(\Phi)$ as assumptions to compute more backbone. Different backbone are caused by different structure, experiments show that by removing a part of non-backbone, assumptions are able to find more backbone caused by complex structures.
+under-approximation $\NBLap(\Phi)$.
 
-
+The algorithm iteratively changes the original model $\lambda$, exactly one literal has changed its assignment at each iteration. Therefore, suppose there are k iterations in Greedy-based Algorithm, there are k literals have different assignments compared to the original model $\lambda$. With more diversiform models, more non-backbone literals are found. There is a heuristic strategy for Greedy-based algorithm, minimal appearance clauses number of a given variable and variables in clauses that have more satisfied literals. If a variable appears in a clause, this clause is a appearance clauses of the given variable, changing the assignment of a variable with minimal appearances number influences the least number of clauses, which in turn has a higher possibility to find another model.
 
 \medskip
 \noindent{\bf Computing an approximation of backbone.}
-At this step, we apply an improved Whitening-based algorithm to compute the approximation $\BLap(\Phi)$.
+At this step, we apply a Whitening-based algorithm to compute the approximation $\BLap(\Phi)$.
 Whitening Algorithm was used to compute \emph{whiten node}, that are the nodes can be colored as white without changing the color of its adjacent nodes in a graph coloring problem.
-We add a stack to record the changed literals in each iteration of Whitening Algorithm. There are two heuristic strategy to refine Whitening Algorithm.
-First, we generate assignments based on the under-approximation of non-backbone and test whether they are models of the given formula to get a more accurate backbone approximation.
-Furthermore, we use dependency structure to find more non-backbone literals from the approximation of backbone.
-Experiments show that the backbone density of $\BLap(\Phi)$ is higher than original density of the given formula.
+Whitening Algorithm aimed at finding essential nodes in a coloring graph problem, it returns nodes that are not colored as white. If a node is considered as essential, it will be returned by Whitening Algorithm.
+
+We consider essential nodes as backbone literals in backbone computing. When applied to non-backbone computing, Whitening Algorithm may return parts of non-backbone literals.
+To increase the proportion of backbone literals found by Whitening Algorithm, we use two heuristic strategies to refine Whitening Algorithm, namely Whitening-based Algorithm.
+First, we check whether the generated assignment is a model to eliminate some of the non-backbone literals returned by Whitening Algorithm.
+Moreover, we use assumptions features of MINISAT \cite{JLM15} to find some of accurate backbone literals.
+With the refinement of these three heuristic strategies, Whitening-based Algorithm is able to return a set of literals that are highly likely to be backbone.
+
 
 \medskip
 \noindent{\bf Computing exact backbone.}
