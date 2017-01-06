@@ -51,17 +51,16 @@
 \address[B]{School of Information Science and Technology ShanghaiTech University, China}
 
 \begin{abstract}
-Propositional satisfiability (SAT) is widely used in both theoretical and practical applications in computer science. Backbone is the common part among all models of a satisfiable formula.
-Generally, backbone is able to accelerate SAT solving, which widely used in fault localization, product configuration and formula simplification.
+%Propositional satisfiability (SAT) is widely used in both theoretical and practical applications in computer science. 
+Backbone is the set of literals that are true in all formula's models.  Computing  backbone efficiently is the key to  accelerate SAT solving, which widely used in fault localization, product configuration and formula simplification.
 In this paper, we propose a greedy-whitening based approach for computing backbone of propositional Boolean formulae.
-We present a Greedy-based algorithm to compute an under-approximation of non-backbone and
+The Greedy-based algorithm is constructed to compute an under-approximation of non-backbone. Moreover, we also propose 
 a Whitening-based algorithm with two heuristic strategies to compute an approximation set of backbone.
 The exact backbone is computed by applying iterative test backbone on the approximations.
 We implemented our approach in a tool \tool and conducted experiments on instances from Industrial tracks of SAT Competitions
-between 2002 and 2016. For industrial benchmarks, experimental results demonstrate that \tool solves as many 34 formulae as \minibones does (72 formulae in total). \tool saved 18\% solving time in total.
+between 2002 and 2016. For industrial benchmarks, experimental results demonstrate that \tool solves as many 34 formulae as \minibones does (72 formulae in total in 3600 seconds), solves (49 formulae)  2 more formula than \minibones(47 formulae)(72 formulae in total in 16000 seconds).   In the case of 3600 seconds, \tool saved 18\% solving time in total.
 \minibones performs better on \textit{mrpp} benchmark (4\% times faster), while \tool performs better on \textit{manthey} benchmark, saving 34\% solving time.
-Moreover, if the solving time limit is larger (16000 seconds), \tool solves 2 more formula than \minibones.
-Experiments with 6606 small formulae generated from 86 unsatisfiable formulae indicate that \tool is able to find more backbone quicker when the structures of the formulae are more complex.
+On the other side, we implemented our approach in a tool \tool and conducted experiments on instances from Uniform Random-3-SAT. Experiments with 6606 small formulae generated from 86 unsatisfiable formulae indicate that \tool is able to find more backbone quicker  when the number of variables in the same clause of the formulae is in some range.
 \end{abstract}
 
 \begin{keyword}
