@@ -15,12 +15,8 @@ We use $\neg\Lit(\Phi)$ to denote the set $\{\neg l \mid l\in \Lit(\Phi)\}$.
 The \emph{size} $|\Phi|$ of $\Phi$ is the number of literals of $\Phi$.
 Given a formula $\Phi$ and a literal $l\in\Lit(\Phi)$,
 let $\Phi_{l}\subseteq \Phi$ be the set of clauses $\{\phi\in\Phi\mid l\in\phi\}$.
-%and $\Phi_\downarrow$ be the set $\{(l,\Phi_{\downarrow l})\mid l\in \Lit(\Phi)\}$.
-%Given a clause $\phi$ of $\Phi$, let $\sharp(\phi,\Phi)$ be the count of occurrence of $\phi$ in the second components of tuples in $\Phi_\downarrow$.
-%Given a set of clauses $\Phi_{l_x}$, let $\Phi_{l_x}^0 = \Phi_{\downarrow l}$, let $\Phi_{\downarrow l}^k$, $\Phi_{\downarrow l}^{k-1}\subseteq\Phi_{\downarrow l}^k\subseteq\Phi_{\downarrow 1}^{k+1}\subseteq\Phi (k \geq 1)$ be the set of clauses $\{\phi\in\Phi \mid \exists l\in\Lit(\Phi_{\downarrow l}^{k-1}), \neg l\in\Lit(\phi)\} (k \geq 1)$.
+Given two different variables $v_1, v_2\in\var(\Phi)$, $v_1$ and $v_2$ are adjacent variables iff there exists a clause $\phi\in\Phi$ such that $(v_1\in\phi)\wedge(v_2\in\phi)$.
 
-%A \emph{partial assignment} is a partial function $\lambda:\X\rightarrow \{0,1\}$ which assigns to each defined variable a Boolean value. Let $\lambda_x$ denote the partial assignment such that for every $y\in \X$, $\lambda_x(y)=\lambda(x)$ if $x=y$, otherwise $\lambda_x(y)$ is undefined.
-%A \emph{complete assignment} is a partial assignment in which all the variables are defined.
 
 An \emph{assignment} is a function $\lambda: \X \rightarrow \{0,1\}$, where $1$ (resp. $0$) denotes true (resp. false).
 Given an assignment $\lambda$ and a literal $l$ that is $x$ or $\neg x$, let $\lambda[\neg l]$ be the assignment which is equal to $\lambda$

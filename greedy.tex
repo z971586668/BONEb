@@ -1,9 +1,10 @@
 \section{Greedy-based Computing $\NBLap(\Phi)$} \label{sec:greedy}
-In this section, we propose an algorithm to compute the under approximation of non-backbone, namely Greedy-based Algorithm. As mentioned in Section \ref{sec:overview}, Greedy-based Algorithm is a straight forward algorithm which is able to compute parts of non-backbone in $O(n^2)$ time. It's able to reduce the number of total SAT calls since a part of non-backbone literals are recognized by Greed-based Algorithm. With less SAT calls, the total solving time is saved. Experiments show that Greedy-based Algorithm reduces 5\% solving time, more experiment details are shown in Section \ref{sec:ind_expr}.
+In this section, we propose an algorithm to compute the under approximation of non-backbone, namely Greedy-based Algorithm. As mentioned in Section \ref{sec:overview}, Greedy-based Algorithm is a straight forward algorithm which is able to compute parts of non-backbone in $O(n^2)$ time. It's able to reduce the number of total SAT calls since literals in $\NBLap(\Phi)$ don't need SAT testings. Experiments show that Greedy-based Algorithm reduces 5\% solving time.
 
 \subsection{Computing $\NBLap(\Phi)$ Using one model}
 
-Given a formula $\Phi$, we first compute a model $\lambda$ using SAT solver. We then computes the set of non-backbone literals using $\lambda$, referred as $L(\Phi,\lambda)$. Every literal in $L(\Phi,\lambda)$ only appears in clauses that has at least two satisfied literals, i.e., $\forall l\in L(\Phi,\lambda), \forall \phi\in\Phi_l, \exists l'\in\phi, \lambda(l')=1$. To compute $L(\Phi,\lambda)$, we first find clauses that have at least two satisfied literals and put them into a set. We then iteratively scan all literals, if a literal satisfies a clause that doesn't appears in the set of clause, we skip this literals and its negation literal. If a literal only satisfies clauses in the set, then we put it into $L(\Phi,\lambda)$.
+Given a formula $\Phi$, we first compute a model $\lambda$ using SAT solver. We then compute the set of non-backbone literals using $\lambda$, referred as $L(\Phi,\lambda)$. Every literal in $L(\Phi,\lambda)$ only satisfies clauses that has at least two satisfied literals, i.e., $\forall l\in L(\Phi,\lambda), \forall \phi\in\Phi_l, \exists l'\in\phi, \lambda(l')=1$.
+To compute $L(\Phi,\lambda)$, we first find clauses that have at least two satisfied literals and put them into a set. We then scan all literals, if a literal satisfies a clause out of the set, we skip this literals and its negation literal. If a literal only satisfies clauses in the set, then we put it into $L(\Phi,\lambda)$.
 
 \begin{algorithm2e}
 \SetKwInOut{Input}{Input}
@@ -37,9 +38,7 @@ In this case, $l$ is also a non-backbone literal.
 \subsection{Computing $\NBLap(\Phi)$ Using Greedy-based Algorithm}
 
 However, $L(\Phi,\lambda)$ may exclude many other non-backbone literals.
-To get more non-backbone literals, we propose the Greedy-based algorithm shown in Algorithm \ref{alg:greedy}. We use $HS$ to denote the heuristic strategy of greedy algorithm. $HS$ greedily find the variables with minimal clauses coverage. Clauses coverage of variables $v$ are the sum of the clauses that contains the literal $v$ or $\neg v$. When changing the assignment of a literal $l$, the less coverage of $l$ has, the less clauses are affected, the higher possibility that a new model is generated.
-
-\newpage
+To get more non-backbone literals, we propose the Greedy-based algorithm shown in Algorithm \ref{alg:greedy}. We use $HS$ to denote the heuristic strategy of greedy algorithm. $HS$ greedily find the literal that satisfied the least clauses. When changing the assignment of a literal $l$, the less clauses $l$ satisfies, the less clauses are affected, the higher possibility that a new model is found.
 
 \begin{algorithm2e}
 \SetKwInOut{Input}{Input}
@@ -62,7 +61,7 @@ $i:=0$\;
 \caption{Greedy-based algorithm}
 \label{alg:greedy}
 \end{algorithm2e}
-Given a formula $\Phi$ and a model $\lambda$, we construct the set of ordered variables set $C$ according to $HS$ at Line \ref{alg1:c}. From Line \ref{alg1:loop}, we start to change the assignment of the current variable in an decreasing order of clauses coverage. At Line \ref{alg1:sat_test}, for each selected literal $l$, we construct a new assignment $\lambda[\neg l]$ from the model
+Given a formula $\Phi$ and a model $\lambda$, we construct the ordered set literals $C$ according to $HS$ at Line \ref{alg1:c}. From Line \ref{alg1:loop}, we start to change the assignment of the literal that satisfies the least clauses. At Line \ref{alg1:sat_test}, for each selected literal $l$, we construct a new assignment $\lambda[\neg l]$ from the model
 $\lambda$ and check whether  $\lambda[\neg l]$ satisfies $\Phi$ or not. If $\lambda[\neg l]$ satisfies $\Phi$, then we add the set of non-backbone literals $L(\Phi,\lambda[\neg l])$ into $\NBLap(\Phi)$, and
 assign $\lambda[\neg l]$ to $\lambda$ which will be severed as the model of $\Phi$ at the next step.
 
@@ -71,7 +70,7 @@ $\NBLap(\Phi)\subseteq\NBL(\Phi)$.
 \end{theorem}
 
 \begin{proof}
-From Theorem \ref{lem:navie}, we learnt that for any model $\lambda$, $L(\Phi,\lambda)\subset\NBLap(\Phi)$. At Line \ref{alg1:sat_test}, we know that $\lambda[\neg l]$ is a model if it passes the test, therefore all literals in $L(\Phi,\lambda[\neg l])$ computed at Line \ref{alg1:coml} is non-backbone literals.
+From Theorem \ref{lem:navie}, we learnt that for any model $\lambda$, $L(\Phi,\lambda)\subset\NBLap(\Phi)$. At Line \ref{alg1:sat_test}, we know that $\lambda[\neg l]$ is a model if it passes the SAT test, therefore all literals in $L(\Phi,\lambda[\neg l])$ computed at Line \ref{alg1:coml} is non-backbone literals.
 \end{proof}
 
 \begin{theorem}
@@ -79,10 +78,7 @@ The complexity of Greedy-based Algorithm is $O(n^2)$.
 \end{theorem}
 
 \begin{proof}
-Line \ref{alg1:init} needs to analysis the appearance relations between clauses and variables. We scan all variables and all clauses to collect the relations and record them, the complexity of Line \ref{alg1:c} is $O(n^2)$. Line \ref{alg1:loop} scan all variables, the complexity is $O(n)$. With the relations recorded at Line \ref{alg1:c}, Line \ref{alg1:sat_test} will be finished in $O(1)$ time. The complexity of the loop started from \ref{alg1:loop} is $O(n)$. The total complexity of Greedy-based Algorithm is $O(n^2)$.
+Line \ref{alg1:init} needs to count the satisfied clauses number of a given literal. We scan all literals and all clauses to collect satisfied situation record them, the complexity of Line \ref{alg1:c} is $O(n^2)$. Line \ref{alg1:loop} scan all literals, the complexity is $O(n)$. With the recorded at Line \ref{alg1:c}, Line \ref{alg1:sat_test} will be finished in $O(1)$ time. The complexity of the loop started from \ref{alg1:loop} is $O(n)$. The total complexity of Greedy-based Algorithm is $O(n^2)$.
 \end{proof}
 
-Greedy-based Algorithm is able to compute implicants of the given formula.
-Greedy-based Algorithm is more efficient compared to implicants enumeration \cite{JLM15}, since SAT testing are saved and 5\% solving time are solved. In implicants enumeration, at least two SAT testings are needed to find a non-backbone literal, while a branch of non-backbone literals are one found with only one SAT testing in Greedy-based Algorithm.
-
-
+Greedy-based Algorithm saved 5\% solving time in total. With non-backbone literals recognized ahead, SAT testing numbers are reduced. Backbone computing is expediting by the save of SAT testings.
