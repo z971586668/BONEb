@@ -65,7 +65,7 @@ $\forall \in W_v, \Pre(l)=\emptyset$\;
         \For{$x'\notin W_v\wedge x'\in\Phi_{\neg x}$}{
             \If{$\forall\phi'\in\Phi_{x'}: \phi'\in W_c$}{
                 \If{$\lambda[\neg (\Pre(x)\cup \{x,x'\})]\models\Phi$}{ \label{alg3:test}
-                    $W_v:=W_v\cup x'$\;
+                    $W_v:=W_v\cup x'$\; \label{alg3:addv}
                     $\Pre(x'):=\Pre(x)\cup x$\; \label{alg3:record}
                 }
             }
@@ -79,14 +79,15 @@ $\forall \in W_v, \Pre(l)=\emptyset$\;
 
 We compute $W_c$ and $W_v$ as usual at the first two lines, and extend $W_c$ and $W_v$ at Line \ref{alg3:loopstart}. At Line \ref{alg3:test}, we test whether the generated assignment is a model of the given formula in polynomial time. At each iteration, $x$ is the variable that changed assignment, $x'$ is a variable that not in $W_v$ yet. If the assignment passes the satisfiability at Line \ref{alg3:test}, $x'$ is added to $W_v$, and $\Pre(x')$ is $\Pre(x)\cup \{x\}$.
 
-The WCB Algorithm finds some missing backbone literlas in Whitening Algorithm. Since the test of satisfiability at Line \ref{alg3:test} is in polynomial time, the time complexity remains the same.
+The WCB Algorithm finds some missing backbone literals in Whitening Algorithm. Since the test of satisfiability at Line \ref{alg3:test} is in polynomial time, the time complexity remains the same.
 
 \begin{theorem}
 $\forall x\in W_v$, $x\in\NBLap(\Phi)$.
 \end{theorem}
 
 \begin{proof}
-Given a formula $\Phi$ and a model $\lambda\models\Phi$. At Line \ref{alg3:test}, a new model is generated after testing $\lambda[\neg \Pre(x)\cup \{x,x'\}]$. It means that there exists two models, $\lambda,\lambda'$, such that $\lambda(x')=1$ and $\lambda'(\neg x')=1$. $x'$ is non-backbone.
+Given a formula $\Phi$ and a model $\lambda\models\Phi$, suppose a variable $x'\in W_v$. If $x'$ is added to $W_v$ at Line \ref{alg3:l2}, then there must exists a literal $l=x$ or $\neg l=x$, for every clause $\phi$ that contains $l$, there must exists another literal $l'$, such that $\lambda(l')=1$. Therefore, there must exists another model $\lambda'=\lambda[\neg l]$ of $\Phi$, $x$ is a non-backbone literal of $\Phi$.
+If $x'$ is added to $W_v$ at Line \ref{alg3:addv}, there must exists a variable $x$, where a new model $\lambda[\neg \Pre(x)\cup \{x,x'\}]$ of $\Phi$ is generated at Line \ref{alg3:test}. Therefore, there exists two different models $\lambda_1$ and $\lambda_2$ of $\Phi$, such that $\lambda_1(x')=0$ and $\lambda_2(x')=1$. $x$ is a non-backbone literal of $\Phi$.
 \end{proof}
 \medskip
 
@@ -199,11 +200,12 @@ $\gamma:=\{l\in\Lit(\Phi) \mid \neg l\in\BLap(\Phi)\}$\; \label{alg4:init}
 Given a model $\lambda$ and a satisfiable formula $\Phi$. We initialize $\gamma$ with $\BLap(\Phi)$ at Line \ref{alg4:init}. For every literal $l\in\BLap(\Phi)$, $\lambda(l)=1$. If we assign $\BLap(\Phi)$ to $\gamma$ directly, the result must be satisfiable since at least $\lambda$ satisfy all the assumptions in $\gamma$. Therefore, we add $\neg l$ to $\gamma$ for every $l\in\BLap(\Phi)$ to block the known model $\lambda$. At Line \ref{alg4:test}, we test the satisfiability of $\Phi$ under the assumption $\gamma$. $b$ is assigned to $1$ if $SAT(\Phi,\gamma)$ is satisfiable, all literals in $\gamma$ will be removed from $\BLap(\Phi)$ at Line \ref{alg4:remove}. If $\Phi$ is not satisfiable any more under the assumption of $\gamma$ ($b==0$), a reason set is returned in $r$. If there is exactly one literal $l_b$ in $r$, $\neg l_b$ must be backbone and added to $\BLapu(\Phi)$ at \ref{alg4:bl}. $\gamma$ is iteratively reducing at Line \ref{alg4:cut}, once $\gamma$ is empty, the iteration stops. Therefore, algorithm terminates since the length of $\gamma$ is finite.
 
 \begin{theorem}
-Given a formula $\Phi$ and a set of assumptions $\gamma$, $l\in\gamma$ is a backbone of $\Phi$ if $l$ is the only reason that $\Phi$ is not satisfiable under the assumption of $\gamma$
+Given a satisfiable formula $\Phi$ and a set of assumptions $\gamma$, $\neg l$ is a backbone of $\Phi$ if $l\in\gamma$ and $l$ is the only reason that $\Phi$ is not satisfiable under the assumption of $\gamma$.
 \end{theorem}
 
 \begin{proof}
-Given a formula $\Phi$, a model $\lambda\models\Phi$, an assumption $\gamma$, a literal $l_b\in\gamma$. We use $SAT(\Phi,\gamma)$ to denote the SAT testing of $\Phi$ under the assumption of $\gamma$. $SAT(\Phi,\gamma)$ is not satisfiable means that there doesn't exist a model $\lambda'$ such that for every literal $l\in\gamma$, $\lambda'(l)=1$. Suppose $l_b$ is the only unsatisfiable reason of $SAT(\Phi,\gamma)$, it indicates that $SAT(\Phi, \{l_b\})$ is not satisfiable. Obviously, adding a clause with only one literal $l_b$ in it is equivalent to $SAT(\Phi,\{l_b\})$, therefore, $\Phi\wedge l_b$ is not satisfiable, there doesn't exist a model $\lambda'$ such that $\lambda'(l_b)=1$. Since $\Phi$ has a model $\lambda$, where $\lambda(\neg l_b)=1$, $\neg l_b$ is a backbone of $\Phi$.
+Given a satisfiable formula $\Phi$ and a set of assumptions $\gamma$, suppose literal $l$ is the only reason returned $r$ from $SAT(\Phi,\gamma)$, i.e., $l\in r$.
+Since $l$ is the only literal in $r$, it means that $SAT(\Phi,\gamma\setminus\{r\})$ is satisfiable, therefore, $SAT(\Phi\wedge(\gamma\setminus\{r\}),\emptyset)$ is satisfiable. It indicates that for a literal $l'\in\gamma, l'\neq l$, $SAT(\Phi\wedge l',\emptyset)$ is satisfiable. We can conclude that $SAT(\Phi\wedge l,\emptyset)$ must be unsatisfiable, since $SAT(\Phi,\gamma)$ is unsatisfiable. It implies that there doesn't exist a model $\lambda'$ of $\Phi$ where $\lambda'(l)=1$. Therefore, $\neg l$ is a backbone of $\Phi$.
 \end{proof}
 
 WAB Algorithm is able to compute the approximation of backbones of the given formula. When the length of unsatisfiable reason is 1, WAB saved solving time when determining if a variable is a backbone. Experiments show that, SAT testings with assumptions are generally finished within 1 second, while original SAT testing may take more than 1 minute. Compared with the original Whitening Algorithm, the accuracy of Whitening-based Algorithm improved by two heuristic strategies (WCB and WAB) has increased. Missing backbone are added to the approximation through WCB and accurate backbone are confirmed with WAB. With a higher accuracy, backbone computing are guided better with $\BLap(\Phi)$.
