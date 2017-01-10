@@ -9,10 +9,10 @@ clause $\phi$, if $l\in\phi$, then $\neg l\not\in \phi$.
 
 A \emph{formula} $\Phi$ over $\X$ is a Boolean combination of variables $\X$.
 We assume that formulae are given in conjunctive normal
-form (CNF), namely each formula $\Phi$ is a conjunction of clauses $\bigwedge_{i=1}^n\phi_i$ which may be regarded as a set of clauses $\{\phi_i\mid 1\leq i\leq n\}$. Given a formula $\Phi$, let $\var(\Phi)$ (resp. $\Lit(\Phi)$  and $\cls(\Phi)$) denote the set of variables (resp. literals and clauses) used in $\Phi$.
+form (CNF), namely each formula $\Phi$ is a conjunction of clauses $\bigwedge_{i=1}^n\phi_i$ which may be regarded as a set of clauses $\{\phi_i\mid 1\leq i\leq n\}$. Given a formula $\Phi$, let $\var(\Phi)$ (resp. $\Lit(\Phi)$  and $\cls(\Phi)$) denote the set of variables (resp. literals and clauses) used in $\Phi$.The \emph{size} $|\Phi|$ of $\Phi$ is the number of literals of $\Phi$.
 We use $\|\Phi\|$ to denote $\sum_{\phi\in\Phi}|\phi|$.
 We use $\neg\Lit(\Phi)$ to denote the set $\{\neg l \mid l\in \Lit(\Phi)\}$.
-The \emph{size} $|\Phi|$ of $\Phi$ is the number of literals of $\Phi$.
+
 Given a formula $\Phi$ and a literal $l\in\Lit(\Phi)$,
 let $\Phi_{l}\subseteq \Phi$ be the set of clauses $\{\phi\in\Phi\mid l\in\phi\}$.
 Given two different variables $v_1, v_2\in\var(\Phi)$, $v_1$ and $v_2$ are adjacent variables iff there exists a clause $\phi\in\Phi$ such that $(v_1\in\phi)\wedge(v_2\in\phi)$.
@@ -21,8 +21,8 @@ Given two different variables $v_1, v_2\in\var(\Phi)$, $v_1$ and $v_2$ are adjac
 An \emph{assignment} is a function $\lambda: \X \rightarrow \{0,1\}$, where $1$ (resp. $0$) denotes true (resp. false).
 Given an assignment $\lambda$ and a literal $l$ that is $x$ or $\neg x$, let $\lambda[\neg l]$ be the assignment which is equal to $\lambda$
 except for $\lambda[\neg l](x)=\neg \lambda(x)$. Given a set of variables $x=\{x_1,...,x_n\}$, let $\lambda[\neg L]$ denote the assignment
-$\lambda[\neg x_1]...[\neg x_n]$.
-An assignment $\lambda$ \emph{satisfies} a formula $\Phi$, denoted by $\lambda\models \Phi$, iff assigning $\lambda(x)$ to $x$ for $x\in\var(\Phi)$ makes $\Phi$ true.
+$\lambda[\neg x_1]...[\neg x_n]$. 
+
 
 \iffalse
 An assignment $\lambda$ is a \emph{model} of $\Phi$ if $\lambda\models \Phi$.
@@ -35,8 +35,9 @@ if $l$ takes the same value in all the models of $\cl_\Phi(\lambda)$. Let $\FL(\
 in the model $\lambda$ of $\Phi$. %, and $\FL(\Phi)$ denote the intersection of $\FL(\Phi,\lambda)$ for all the models $\lambda$ of $\Phi$.
 \fi
 
-A formula $\Phi$ is \emph{satisfiable} iff there exists an assignment $\lambda$ such that $\lambda\models \Phi$.
-Given a formula $\Phi$, the \emph{satisfiability problem} is to decide whether $\Phi$ is satisfiable or not.
+An assignment $\lambda$ \emph{satisfies} a formula $\Phi$, denoted by $\lambda\models \Phi$, iff assigning $\lambda(x)$ to $x$ for $x\in\var(\Phi)$ makes $\Phi$ true.
+%A formula $\Phi$ is \emph{satisfiable} iff there exists an assignment $\lambda$ such that $\lambda\models \Phi$.
+%Given a formula $\Phi$, the \emph{satisfiability problem} is to decide whether $\Phi$ is satisfiable or not.
 
 \smallskip
 
