@@ -3,8 +3,9 @@ In this section, we propose an algorithm to compute the under approximation of n
 
 \subsection{Computing $\NBLap(\Phi)$ Using one model}
 
-Given a formula $\Phi$, we first compute a model $\lambda$ using SAT solver. We then compute the set of non-backbone literals using $\lambda$, referred as $L(\Phi,\lambda)$. Every literal in $L(\Phi,\lambda)$ only satisfies clauses that has at least two satisfied literals, i.e., $\forall l\in L(\Phi,\lambda), \forall \phi\in\Phi_l, \exists l'\in\phi, \lambda(l')=1$.
-To compute $L(\Phi,\lambda)$, we first find clauses that have at least two satisfied literals and put them into a set. We then scan all literals, if a literal satisfies a clause out of the set, we skip this literal and its negation literal. If a literal only satisfies clauses in the set, then we put it into $L(\Phi,\lambda)$.
+Given a formula $\Phi$, we first compute a model $\lambda$ using SAT solver. We then compute the set of non-backbone literals using $\lambda$, referred as $L(\Phi,\lambda)$.
+% Every literal in $L(\Phi,\lambda)$ only satisfies clauses that has at least two satisfied literals, i.e., $\forall l\in L(\Phi,\lambda), \forall \phi\in\Phi_l, \exists l'\in\phi, \lambda(l')=1$.
+To compute $L(\Phi,\lambda)$, we first find clauses that have at least two satisfied literals and put them into a set, refereed as $\Phi_{\models_2}$. We then scan all literals in $\Lit(\Phi)$, and skip literal $l$ and $\neg l$ if $l$ satisfies a clause $\phi\notin\Phi_{\models_2}$. Otherwise, then we put it into $L(\Phi,\lambda)$.
 
 \begin{algorithm2e}
 \SetKwInOut{Input}{Input}
@@ -15,28 +16,26 @@ To compute $L(\Phi,\lambda)$, we first find clauses that have at least two satis
 \Output{a set of literals $\NBLap(\Phi)$}
 $\NBLap(\Phi):=L(\Phi,\lambda)$\;
 \Return $\NBLap(\Phi)$\;
-\caption{Naive Algorithm: Computing non-backbone literals using $\lambda$}
+\caption{Na\"{\i}ve Algorithm: Computing non-backbone literals using $\lambda$}
 \label{alg:greedy}
 \end{algorithm2e}
 
-The only line in this naive Algorithm is computing the non-backbone literals set of a given model $\lambda$.
+The only line in this na\"{\i}ve Algorithm is computing the non-backbone literals set of a given model $\lambda$.
 
 \begin{theorem} \label{lem:navie}
  $L(\Phi,\lambda)\subseteq\NBL(\Phi)$.
 \end{theorem}
 
 \begin{proof}
-If $\lambda(l)=1$ and for all clauses $\phi\in\Phi_l$, $\phi$ contains another literal $l'$ which is also satisfied by the model $\lambda$, then it is easy to see that
-the assignment $\lambda[\neg l]$ satisfies $\Phi$.
-In this case, $l$ is a non-backbone literal.
+Suppose a literal $l\in\L(\Phi,\lambda)$. According to the Na\"{\i}ve Algorithm, $\lambda(l)=1$, and there must exists a literal $l'$ in any clause $\phi$ that contains $l$, such that $l'\neq l\wedge\lambda(l')=1$. Therefore, there must exist a model $\lambda'=\lambda[\neg l]$. It concludes that $l$ is a non-backbone literal of $\Phi$, i.e., $l\in\NBL(\Phi)$.
 \end{proof}
 
 \medskip
 
 \subsection{Computing $\NBLap(\Phi)$ Using Greedy-based Algorithm}
 
-However, $L(\Phi,\lambda)$ may exclude many other non-backbone literals.
-To get more non-backbone literals, we propose the Greedy-based algorithm shown in Algorithm \ref{alg:greedy}. We use $HS$ to denote the heuristic strategy of greedy algorithm. $HS$ greedily find the literal that satisfied the least clauses. 
+To save more SAT testings, we propose the Greedy-based algorithm shown in Algorithm \ref{alg:greedy} to get more non-backbone literals. We use $HS$ to denote the heuristic strategy of greedy algorithm. 
+% $HS$ greedily find the literal that satisfied the least clauses.
 $C$ is an order set of literals, resulted from the heuristic strategy $HS$.
 When changing the assignment of a literal $l$, the less clauses $l$ satisfies, the less clauses are affected, the higher possibility that a new model is found.
 
@@ -70,7 +69,7 @@ $\NBLap(\Phi)\subseteq\NBL(\Phi)$.
 \end{theorem}
 
 \begin{proof}
-From Theorem \ref{lem:navie}, we learnt that for any model $\lambda$, $L(\Phi,\lambda)\subset\NBLap(\Phi)$. At Line \ref{alg1:sat_test}, we know that $\lambda[\neg l]$ is a model if it passes the SAT testing, therefore all literals in $L(\Phi,\lambda[\neg l])$ computed at Line \ref{alg1:coml} is non-backbone literals.
+Suppose a literal $l\in\NBLap(\Phi)$, if $l\in L(\Phi,\lambda)$, $l\in\NBL(\Phi)$ (Theorem \ref{lem:navie}). Otherwise, we know that there must exists a model $\lambda'$, $l\in L(\Phi,\lambda')$ according to Line \ref{alg1:sat_test}. Since $L(\Phi,\lambda')\subseteq\NBL(\Phi)$ (Theorem \ref{lem:navie}), $l\in\NBL(\Phi)$. It concludes that $\NBLap(\Phi)\subseteq\NBL(\Phi)$.
 \end{proof}
 
 \begin{theorem}

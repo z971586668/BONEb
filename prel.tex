@@ -21,7 +21,7 @@ Given two different variables $v_1, v_2\in\var(\Phi)$, $v_1$ and $v_2$ are adjac
 An \emph{assignment} is a function $\lambda: \X \rightarrow \{0,1\}$, where $1$ (resp. $0$) denotes true (resp. false).
 Given an assignment $\lambda$ and a literal $l$ that is $x$ or $\neg x$, let $\lambda[\neg l]$ be the assignment which is equal to $\lambda$
 except for $\lambda[\neg l](x)=\neg \lambda(x)$. Given a set of variables $x=\{x_1,...,x_n\}$, let $\lambda[\neg L]$ denote the assignment
-$\lambda[\neg x_1]...[\neg x_n]$. 
+$\lambda[\neg x_1]...[\neg x_n]$.
 
 
 \iffalse
@@ -44,7 +44,7 @@ An assignment $\lambda$ \emph{satisfies} a formula $\Phi$, denoted by $\lambda\m
 \begin{definition}[Backbone]
 \label{def:backbone}
 Given a satisfiable formula $\Phi$, a literal $l$ is a \emph{backbone literal} of $\Phi$ iff for all assignments $\lambda$ such that $\lambda\models\Phi$,
-$\lambda\models l$. The \emph{backbone} $\BL(\Phi)$ of $\Phi$ is the set of backbone literals of $\Phi$.
+$\lambda(l)=1$. The \emph{backbone} $\BL(\Phi)$ of $\Phi$ is the set of backbone literals of $\Phi$.
 \end{definition}
 
 \iffalse
@@ -62,6 +62,10 @@ The backbone of an unsatisfiable formula can be defined as an empty set. Therefo
 We will use $\NBL(\Phi)$ to denote the set
 $\Lit(\Phi)\setminus \BL(\Phi)$.
 
+\begin{remark}
+Given an assignment $\lambda$ of a formula $\Phi$, $\lambda$ is a model of $\Phi$ iff $\lambda\models\Phi$.
+\end{remark}
+
 \begin{theorem}
 \label{thm:co-NP}\cite{Jan10}
 Given a satisfiable formula $\Phi$ and a literal $l$, deciding whether $l$ is a backbone literal is co-NP-complete.
@@ -69,15 +73,17 @@ Given a satisfiable formula $\Phi$ and a literal $l$, deciding whether $l$ is a 
 
 \begin{definition}[Satisfied literal]
 Given a model $\lambda$ of the formula $\Phi$ and a clause $\phi\in\Phi$, for each literal $l\in\phi$, $l$ is a \emph{satisfied literal}
-of $\phi$ iff $\lambda\models l$. $l$ is a \emph{unique satisfied literal} of $\phi$ if there is no satisfied literal $l'$ of $\phi\setminus\{l\}$.
+of $\phi$ iff $\lambda(l)=1$. $l$ is a \emph{unique satisfied literal} of $\phi$ if there is no satisfied literal $l'$ of $\phi\setminus\{l\}$.
 \end{definition}
 
-Let us consider the formula $\Phi=\{\neg x_1 \vee \neg x_2, x_1, x_3 \vee x_4\}$,
+For instance, let us consider the formula $\Phi=\{\neg x_1 \vee \neg x_2, x_1, x_3 \vee x_4\}$,
 $\var(\Phi)=\{x_1, x_2, x_3, x_4\}$, $\Lit(\Phi)=\{\neg x_1, x_1, \neg x_2, x_3, x_4\}$, $\Phi_{\neg x_2}=\{\neg x_1 \vee \neg x_2\}$ and $\BL(\Phi)=\{x_1, \neg x_2\}$.
 Given a model $\lambda$ such that $\lambda(\neg x_1)=1,\lambda(\neg x_2)=0$. The satisfied literal of clause ($\neg x_1\vee\neg x_2$) is $\neg x_1$.
 
+\iffalse
 Given a formula $\Phi$ and a literal $l$, let $\Cnt(\Phi,l)$ denote the number of occurrence of $l$ in $\Phi$.
 The \emph{density} $\dens(\Phi,l)$ of $l$ in $\Phi$ is defined as
 \[
 \dens(\Phi, l)=\frac{\Cnt(\Phi,l)}{\|\Phi_l\|}.
 \]
+\fi

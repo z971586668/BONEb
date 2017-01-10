@@ -2,7 +2,7 @@
 To study the performance of our tool \tool, we compare it to state-of-art tool \minibones and analysis total solving time for different groups of formulae.
 We implemented \tool in C++ interfacing MINISAT 2.2 \cite{MINISAT}.The experiments were conducted on a cluster of IBM iDataPlex 2.83 GHz, each industrial formula was running with a memory limit of 4GB. Each random formula was running with a memory limit of 256 MB.
 
-In the experiments, we separate formulae into groups. For example, if a set of formulae are generated from the application of hardware model checking, then they belong to the same group. We study the performance of \tool in different groups, results show that \tool saved 18\% solving time in total and performs the best in $\textit{manthey}$ group, saving 34\% of solving time.
+In the experiments, we separate formulae into groups. For example, if a set of formulae are generated from the application of hardware model checking, then they belong to the same group. We study the performance of \tool in different groups, results show that \tool saved 21\% solving time in total and performs the best in $\textit{manthey}$ group, saving 34\% of solving time.
 We also conduct experiments on 86 groups of random formulae, which are generated from 86 unsatisfiable formulae.
 \tool saved 0.4\% solving time among all random formulae. In all 86 groups, \tool performs faster than \minibones on 58 of them.
 
@@ -17,7 +17,7 @@ There are 3 groups among industrial formulae, which are $\textit{mrpp}$, $\texti
 \subsection{Means of Presentation}
 The experiments consists of two parts, the first part shows the results in industrial formulae and the second part shows results among random formulae.
 We use $\textbf{st}$ to denote the solving time and $\textbf{sc}$ to represent SAT testings number.
-A number of results are shown as plots figures. In the figures, each line represents a tool performance of the input formulae. The x-axis stands for different formulae and the y-axis stands for the solving time of the corresponding formulae. 
+A number of results are shown as plots figures. In the figures, each line represents a tool performance of the input formulae. The x-axis stands for different formulae and the y-axis stands for the solving time of the corresponding formulae.
 
 \subsection{Experimental Results on Industrial Formulae}\label{sec:ind_expr}
 Among the 72 industrial formulae, both \tool and \minibones are able to solve 34 of them in 3600 seconds (1 hour).
