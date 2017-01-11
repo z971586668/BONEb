@@ -1,7 +1,11 @@
 \section{Overview of our Approach}\label{sec:overview}
-We show the overview of our approach \tool in Figure \ref{flow}. Taking a satisfiable formula
-$\Phi$ as an input, \tool first computes a subset of non-backbone $\NBLap(\Phi)\subseteq \NBL(\Phi)$. 
-Then, \tool computes an intermediate set of backbone $\BLap(\Phi)$ based on the set $\NBLap(\Phi)$, where each literal $l\in \BLap(\Phi)$ has a high possibility to be a backbone literal of $\Phi$.
+In this section, we present the overview of our approach, called BONE, for computing backbone. Figure 1 depicts the framework of BONE.
+% We show the overview of our approach \tool in Figure \ref{flow}.
+Taking a satisfiable formula $\Phi$ as an input, \tool first computes a subset of non-backbone $\NBLap(\Phi)\subseteq \NBL(\Phi)$.
+Then, \tool computes
+% an intermediate set of backbone $\BLap(\Phi)$
+approximation $\BLap(\Phi)$ of the backbone
+based on the set $\NBLap(\Phi)$, where each literal $l\in \BLap(\Phi)$ has a high possibility to be a backbone literal of $\Phi$.
 Finally, \tool removes non-backbone literals from $\BLap(\Phi)$ and adds backbone literals into $\BLap(\Phi)$ to compute the exact backbone of $\Phi$.
 \begin{figure*}[t]
    \includegraphics[scale=0.75]{Framework}
@@ -10,10 +14,9 @@ Finally, \tool removes non-backbone literals from $\BLap(\Phi)$ and adds backbon
    \label{flow}
 \end{figure*}
 
-As shown in Figure \ref{flow}, $\NBLap(\Phi)$ only contains a part of non-backbone literals.
-Most of the literals in $\BLap(\Phi)$ are backbone, only a small part of them is non-backbone.
-% In iterative testing (step 3), experiments show that solving time are saved by testing the literals in $\BLap(\Phi)$ first. It's because that there is a higher possibility to choose a backbone from $\BLap(\Phi)$. 
-With more known backbone literals, SAT testings are accelerated.
+% As shown in Figure \ref{flow}, $\NBLap(\Phi)$ only contains a part of non-backbone literals.
+% Most of the literals in $\BLap(\Phi)$ are backbone, only a small part of them is non-backbone.
+% With more known backbone literals, SAT testings are accelerated.
 
 \medskip
 \noindent{\bf Computing an under-approximation of non-backbone.}
@@ -21,17 +24,17 @@ Given a satisfiable formula $\Phi$, we first compute a model $\lambda$ of $\Phi$
 From the model $\lambda$, we compute a base under-approximation of non-backbone.
 Later, we apply a Greedy-based algorithm to add more non-backbone literals into the base set, which results in $\NBLap(\Phi)$.
 
-The algorithm iteratively computes new models based on the original model $\lambda$, by changing exactly one literal at each iteration. K models will be generated during the k iterations. New non-backbone are found from each new model. The heuristic strategy for Greedy-based algorithm is changing the literal that satisfies the least clauses at each iteration. 
-%When changing a literal's assignment, clauses remain their satisfiability if this literal is not their satisfied litera. 
-Choosing the literal that satisfies the least clauses will affects the least clauses, which lead to a higher possibility of finding a new model.
+%The algorithm iteratively computes new models based on the original model $\lambda$, by changing exactly one literal at each iteration. K models will be generated after the k iterations. New non-backbone literals are found from each new model. The main idea of Greedy-based algorithm is changing the literal that satisfies the least clauses at each iteration.
+% Choosing the literal that satisfies the least clauses will affects the least clauses, which lead to a higher possibility of finding a new model.
+The algorithm iteratively computes new models until no new model can be found. We choose to change the literal that satisfies the least clauses at each iteration, as the number of clauses effected by this literal is the least one, provided a higher possibility to find a new model. K models will be generated after the k iterations. New non-backbone literals are found from each new model.
 
 \medskip
 \noindent{\bf Computing an approximation of backbone.}
-At this step, we apply a Whitening-based algorithm to compute the approximation $\BLap(\Phi)$.
-Whitening Algorithm was used to compute \emph{essential node}, that are nodes can't be colored as white without changing the color of its adjacent nodes in a graph coloring problem.
+At this step, we apply a Whitening-based algorithm to compute an approximation $\BLap(\Phi)$.
+Whitening Algorithm was used to compute \emph{essential nodes} that cannot be colored as white without changing the color of its adjacent nodes in a graph coloring problem.
 
 
-We consider essential nodes as "possible" backbone literals in backbone computing.
+We consider essential nodes as 'possible' backbone literals in backbone computing.
 To increase the proportion of backbone literals found by Whitening Algorithm, we use two heuristic strategies to refine Whitening Algorithm.
 First, we check whether the generated assignment is a model to eliminate some of the non-backbone literals returned by Whitening-based Algorithm.
 Moreover, we use assumptions features of MINISAT \cite{JLM15} to find some accurate backbone literals.

@@ -10,12 +10,11 @@ clause $\phi$, if $l\in\phi$, then $\neg l\not\in \phi$.
 A \emph{formula} $\Phi$ over $\X$ is a Boolean combination of variables $\X$.
 We assume that formulae are given in conjunctive normal
 form (CNF), namely each formula $\Phi$ is a conjunction of clauses $\bigwedge_{i=1}^n\phi_i$ which may be regarded as a set of clauses $\{\phi_i\mid 1\leq i\leq n\}$. Given a formula $\Phi$, let $\var(\Phi)$ (resp. $\Lit(\Phi)$  and $\cls(\Phi)$) denote the set of variables (resp. literals and clauses) used in $\Phi$.The \emph{size} $|\Phi|$ of $\Phi$ is the number of literals of $\Phi$.
-We use $\|\Phi\|$ to denote $\sum_{\phi\in\Phi}|\phi|$.
-We use $\neg\Lit(\Phi)$ to denote the set $\{\neg l \mid l\in \Lit(\Phi)\}$.
+We use $\|\Phi\|$ to denote $\sum_{\phi\in\Phi}|\phi|$, and $\neg\Lit(\Phi)$ to denote the set $\{\neg l \mid l\in \Lit(\Phi)\}$.
 
 Given a formula $\Phi$ and a literal $l\in\Lit(\Phi)$,
 let $\Phi_{l}\subseteq \Phi$ be the set of clauses $\{\phi\in\Phi\mid l\in\phi\}$.
-Given two different variables $v_1, v_2\in\var(\Phi)$, $v_1$ and $v_2$ are adjacent variables iff there exists a clause $\phi\in\Phi$ such that $(v_1\in\phi)\wedge(v_2\in\phi)$.
+Given two different variables $x_1, x_2\in\var(\Phi)$, $x_1$ and $x_2$ are adjacent variables iff there exists a clause $\phi\in\Phi$ such that $(x_1\in\phi)\wedge(x_2\in\phi)$.
 
 
 An \emph{assignment} is a function $\lambda: \X \rightarrow \{0,1\}$, where $1$ (resp. $0$) denotes true (resp. false).
@@ -62,13 +61,13 @@ The backbone of an unsatisfiable formula can be defined as an empty set. Therefo
 We will use $\NBL(\Phi)$ to denote the set
 $\Lit(\Phi)\setminus \BL(\Phi)$.
 
-\begin{remark}
+\begin{definition}
 Given an assignment $\lambda$ of a formula $\Phi$, $\lambda$ is a model of $\Phi$ iff $\lambda\models\Phi$.
-\end{remark}
+\end{definition}
 
 \begin{theorem}
 \label{thm:co-NP}\cite{Jan10}
-Given a satisfiable formula $\Phi$ and a literal $l$, deciding whether $l$ is a backbone literal is co-NP-complete.
+Given a satisfiable formula $\Phi$ and a literal $l$, deciding whether $l$ is a backbone literal is co-NP complete.
 \end{theorem}
 
 \begin{definition}[Satisfied literal]
@@ -76,9 +75,9 @@ Given a model $\lambda$ of the formula $\Phi$ and a clause $\phi\in\Phi$, for ea
 of $\phi$ iff $\lambda(l)=1$. $l$ is a \emph{unique satisfied literal} of $\phi$ if there is no satisfied literal $l'$ of $\phi\setminus\{l\}$.
 \end{definition}
 
-For instance, let us consider the formula $\Phi=\{\neg x_1 \vee \neg x_2, x_1, x_3 \vee x_4\}$,
-$\var(\Phi)=\{x_1, x_2, x_3, x_4\}$, $\Lit(\Phi)=\{\neg x_1, x_1, \neg x_2, x_3, x_4\}$, $\Phi_{\neg x_2}=\{\neg x_1 \vee \neg x_2\}$ and $\BL(\Phi)=\{x_1, \neg x_2\}$.
-Given a model $\lambda$ such that $\lambda(\neg x_1)=1,\lambda(\neg x_2)=0$. The satisfied literal of clause ($\neg x_1\vee\neg x_2$) is $\neg x_1$.
+For instance, let us consider the formula $\Phi=\{\neg l_1 \vee \neg l_2, l_1, l_3 \vee l_4\}$,
+$\var(\Phi)=\{x_1, x_2, x_3, x_4\}$, $\Lit(\Phi)=\{\neg l_1, l_1, \neg l_2, l_3, l_4\}$, $\Phi_{\neg l_2}=\{\neg l_1 \vee \neg l_2\}$ and $\BL(\Phi)=\{l_1, \neg l_2\}$.
+Given a model $\lambda$ such that $\lambda(\neg l_1)=1,\lambda(\neg l_2)=0$. The satisfied literal of clause ($\neg l_1\vee\neg l_2$) is $\neg l_1$.
 
 \iffalse
 Given a formula $\Phi$ and a literal $l$, let $\Cnt(\Phi,l)$ denote the number of occurrence of $l$ in $\Phi$.

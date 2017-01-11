@@ -1,31 +1,29 @@
 \section{Experimental Study}\label{sec:expr}
-To study the performance of our tool \tool, we compare it to state-of-art tool \minibones and analysis total solving time for different groups of formulae.
+To study the performance of \tool, we compare it to state-of-the-art tool \minibones~\cite{JLM15} and analysis total solving time for different groups of formulae.
 We implemented \tool in C++ interfacing MINISAT 2.2 \cite{MINISAT}.The experiments were conducted on a cluster of IBM iDataPlex 2.83 GHz, each industrial formula was running with a memory limit of 4GB. Each random formula was running with a memory limit of 256 MB.
 
-In the experiments, we separate formulae into groups. For example, if a set of formulae are generated from the application of hardware model checking, then they belong to the same group. We study the performance of \tool in different groups, results show that \tool saved 21\% solving time in total and performs the best in $\textit{manthey}$ group, saving 34\% of solving time.
-We also conduct experiments on 86 groups of random formulae, which are generated from 86 unsatisfiable formulae.
-\tool saved 0.4\% solving time among all random formulae. In all 86 groups, \tool performs faster than \minibones on 58 of them.
+In the experiments, we separate formulae into groups. For example, if a set of formulae are generated from the application of hardware model checking, then they belong to the same group. We study the performance of \tool in 3 different groups, under different time limits. In 3600 seconds, results show that \tool saved 21\% solving time in total and performs the best in $\textit{manthey}$ group, saving 34\% of solving time. In 16000 seconds, results show that \tool solved 2 more formulae (49 formulae) than \minibones does.
+We also conduct experiments on 86 groups of random formulae, \tool saved 0.4\% solving time among all random formulae. In all 86 groups, \tool performs faster than \minibones on 58 of them.
 
-Experiments show that both \tool and \minibones are good at solving industrial formulae which have clear partitions of variables, \tool performs better than \minibones in general. Compared to industrial formulae, random formulae have more clear variables partitions, and are less complex than industrial formulae. In the experiments of random formulae, results indicate that \tool is good at solving formula with more variables that have over 10 adjacent variables. More adjacent variables make the formula more complex. Together with two experiments, we can conclude that for formulae that have variables partitions, \tool performs better than \minibones if the structures of the formulae are more complex.
-
+Experiments show that both \tool and \minibones are good at solving industrial formulae which have clear partitions of variables. For the solved formulae, \tool performs better than \minibones in general, especially on more complex formulae. \tool performs better on industrial formulae, which are more complex than random formulae. In the experiments of random formulae, results indicate that \tool is good at solving formula with more variables that have over 10 adjacent variables. More adjacent variables make the formula more complex. 
 \subsection{Benchmark Setup}
 
 % It's available at xxx.
 We selected 72 industrial formulae and 100 crafted formulae from SAT competitions between 2002 and 2016. Results show that non of the crafted formula is solved by any tool. Therefore, instead of using crafted formulae, we generate 6600 satisfiable formulae from 86 unsatisfiable formulae, selected from Uniform-3-SAT problem. The formulae generated from the same unsatisfiable formula shared the same features and all 6600 formulae have the same variables and clauses number. We consider it fair using random formulae to test the scalability of \tool and \minibones, since both of them applied MINISAT as its SAT solver.
-There are 3 groups among industrial formulae, which are $\textit{mrpp}$, $\textit{manthey}$ and $\textit{dimacs}$. And 86 groups among 6600 random formulae, separated by the original unsatisfiability naturally.
+There are 3 groups among industrial formulae, which are $\textit{mrpp}$, $\textit{manthey}$ and $\textit{dimacs}$. And 86 groups among 6600 random formulae, separated by the original unsatisfiability formulae naturally.
 
 \subsection{Means of Presentation}
 The experiments consists of two parts, the first part shows the results in industrial formulae and the second part shows results among random formulae.
 We use $\textbf{st}$ to denote the solving time and $\textbf{sc}$ to represent SAT testings number.
-A number of results are shown as plots figures. In the figures, each line represents a tool performance of the input formulae. The x-axis stands for different formulae and the y-axis stands for the solving time of the corresponding formulae.
+Comparisons of solving time among individual formula are shown as plots figures. In the figures, each line represents a tool performance of the formulae. The x-axis stands for the individual formula and the y-axis stands for the solving time of the corresponding formula.
 
 \subsection{Experimental Results on Industrial Formulae}\label{sec:ind_expr}
 Among the 72 industrial formulae, both \tool and \minibones are able to solve 34 of them in 3600 seconds (1 hour).
 If more solving time is provided, \tool solved 49 formulae in 16000 seconds (almost 5 hours) while \minibones solved 47 formulae.
-The details of solving time and SAT tests number comparison of each benchmark are shown in Table \ref{tab:ind} (with 1 hour time limits). We can observe that \tool performs the best on $\textit{manthey}$ group, saved 34\% solving time compared to \minibones, with 14\% saving on SAT tests numbers. In total, \tool saved 21\% solving time and 16\% less SAT calls. Our experiments result prove the observation in \cite{JLM15} that less SAT calls will lead to a faster solving.
+The details of solving time and SAT tests number comparison of each group are shown in Table \ref{tab:ind} (with 1 hour time limits). We can observe that \tool performs the best on $\textit{manthey}$ group, saved 34\% solving time, with 17\% saving on SAT testings. In total, \tool saved 21\% solving time and 16\% SAT testings. \tool saved 11\% solving time and 14\% SAT testings in $\textit{mrpp}$ group, while saving 2\% time and 0.1\% SAT testings in $\textit{dimacs}$ group. It proves the observation in \cite{JLM15} from experiment concepts that less SAT testing will lead to a faster solving.
 Figure \ref{fig:ind} shows the solving time of all 34 industrial formulae, there are only 3 formulae that \minibones outperforms \tool.
 
-When we take a look at the formulae in $\textit{manthey}$ group that \tool performs the best, we find that they all have a star-like adjacent structure as shown in Figure \ref{fig:cs} (a). It means that the variables is separate into different partitions, different variables from different partitions only appears in a few clauses at the same time. Each branch in the graph stands for a partition.
+When we take a look at the formulae in $\textit{manthey}$ group that \tool performs the best, we find that they all have a star-like adjacent structure as shown in Figure \ref{fig:cs}(a). It means that the variables is separate into different partitions, different variables from different partitions only appears in a few clauses at the same time. Each branch in the graph stands for a partition.
 
 
 
@@ -53,7 +51,6 @@ total & 12296 & 15632 & \textbf{21\%} & 70915 & 84423 \\
 \end{figure}
 
 Figure \ref{fig:cs}(b) is the adjacent structure of formulae that can't be solved in 16000 seconds using both tools. It's obvious that there is no clear partition among the variables.
-
 
 \begin{figure}[t]
 \centering
@@ -121,5 +118,7 @@ Active Variables Number & $\textbf{st}$ of \tool(s) & $\textbf{st}$ of \minibone
 \label{tab:mcs}
 \end{table}
 
-
+\subsection{Result analysis}
+Iterative SAT testings, which will hold the assignment of a literal $l$ using assumptions, take the major part of solving time in \tool. Different solving trees will be generated when choosing different $l$. The SAT testing will be faster if a SAT solving tree is able to find conflicts earlier. Conflicts will be found earlier if the chosen literal $l$ is a backbone literal and mainly appears in a small part of the clauses in the formula, due to the reducing of searching clauses. Therefore, given a formula $\Phi$ in $\textit{manthey}$ group, iterative SAT testing of a backbone literal $l\in\BL(\Phi)$ will be faster since $\Phi$ has a clear partitions of variables and each backbone literal mainly appears in a subset of $\cls(\Phi)$. In this way, computing $\BLap(\Phi)$ in \tool performs better on formulae in $\textit{manthey}$ group. There is no big difference of $\NBLap(\Phi)$ performance among groups since the computing time that $\NBLap(\Phi)$ is only related to the numbers of clauses and variables of the formula.
+On the other hand, if the structures of random formulae are too simple (less than 210 variables have over 10 adjacent variables), \tool are compatible with \minibones since iterative SAT testings using both backbone and non-backbone are fast.
 
