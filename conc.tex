@@ -10,9 +10,10 @@
 
 %\section{Conclusion}\label{sec:conc}
 In this paper, we proposed a backbone computing approach named \tool, using Greedy-Whitening based algorithm.
-First, we computed an under-approximation of non-backbone $\NBLap(\Phi)$ using Greedy-based Algorithm in $O(n^2)$ time. Literals in $\NBLap(\Phi)$ didn't need an iterative SAT testing, the saving of SAT testings resulted in the saving of solving time.
-Next, we computed an approximation of backbone $\BLap(\Phi)$ using Whitening-based Algorithm. We iteratively extended the set of clauses $W_c$ and variables $W_v$ accordingly. $\BLap(\Phi)$ was the complement of $W_v$. Experiments showed that the proportions of backbone in $\BLap(\Phi)$ were higher than that in the original formula. Finding more backbone earlier will expedite backbone computing. It's because that more known backbone can prune more states in SAT solving.
-At last, we iteratively determined whether a literal is backbone from previous approximations.
+First, we computed an under-approximation of non-backbone $\NBLap(\Phi)$ using Greedy-based Algorithm in $O(n^2)$ time. Literals in $\NBLap(\Phi)$ didn't need an iterative SAT testing which can save of solving time.
+%the saving of SAT testings resulted in the saving of solving time.
+Next, we computed an approximation of backbone $\BLap(\Phi)$ using Whitening-based Algorithm. The elements in $\BLap(\Phi)$  would be backbone with high possibility. We iteratively extended the set of clauses $W_c$ and variables $W_v$ accordingly. $\BLap(\Phi)$ was the complement of $W_v$. Experiments showed that the proportions of backbone in $\BLap(\Phi)$ were higher than that in the original formula. Finding more backbone earlier will expedite backbone computing. It's because that more known backbone can prune more states in SAT solving.
+At last, we iteratively confirmed backbone from previous approximations.
 
 We compared \tool with state-of-art tool \minibones, on both industrial formulae and random formulae.
 Experimental results for industrial formulae demonstrated that both \tool and \minibones were able to solve 34 formulae from 72 formulae in 3600 seconds. Among the three industrial groups, \tool saved 21\% solving time in total than \minibones does. \tool performed the best in $\textit{manthey}$ group. For every formula in $\textit{manthey}$, \tool needed less solving time than \minibones does.

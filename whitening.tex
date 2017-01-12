@@ -4,7 +4,7 @@ In this section, we propose an algorithm to compute approximate set of backbone 
 
 \subsection{Whitening Algorithm}
 
-Given a formula $\Phi$, a literal $l\in\Lit(\Phi)$ is either a backbone or not. Backbone literals are essential, since an assignment $\lambda$ is not a model if there exists a backbone literal $l$, $\lambda(l)=0$. There is a similar situation in graph coloring problem, while there not exists a coloring plan if essential nodes are colored to white without changing the color of their neighbours'.
+%Given a formula $\Phi$, a literal $l\in\Lit(\Phi)$ is either a backbone or not. Backbone literals are essential, since an assignment $\lambda$ is not a model if there exists a backbone literal $l$, $\lambda(l)=0$. There is a similar situation in graph coloring problem, while there not exists a coloring plan if essential nodes are colored to white without changing the color of their neighbours'.
 
 In \cite{Par03}, the authors proposed an Whitening algorithm that computed the essential nodes in a coloring problem named Whitening Algorithm. We propose a Whitening-based Algorithm for 'possible' backbone (essential) literals computing based on the original one. We use $W_c$ to denote the clauses that have at least two satisfied literals to a given model. We use $W_v$ to represent a set of variables, every variable $x$ in $W_v$ only satisfies clauses clauses in $W_c$. $W_c$ and $W_v$ are updated concurrently.
 
@@ -160,7 +160,7 @@ This gives a more tight approximation set of backbone literals which is the desi
 
 \subsection{Computing Parts of Exact Backbone Using Assumptions}
 
-Although WCB Algorithm is able to compute an approximation set of backbone, it still needs at least one SAT testing to determine whether a literal is backbone, which may need a long solving time. Inspired by \cite{JLM15}, we use assumptions in MINISAT as a heuristic strategy to accelerate SAT testing, named Whitening-assumptions-based Algorithm, WAB for short. 
+Although WCB Algorithm is able to compute an approximation set of backbone, it still needs at least one SAT testing to determine whether a literal is backbone, which may need a long solving time. Inspired by \cite{JLM15}, we use assumptions in MINISAT as a heuristic strategy to accelerate SAT testing, named Whitening-assumptions-based Algorithm, WAB for short.
 
 Experiments show that given the same formula $\Phi$, SAT testings with assumptions are generally faster then the ones without assumptions. It's because that assumptions help to make the initial decisions of a SAT solving, given an assumption $\gamma$ with k literals in it, it reduces $2^k$ states of the searching spaces. SAT testing with a longer assumptions will return faster.
 
@@ -208,6 +208,6 @@ Given a satisfiable formula $\Phi$ and a set of assumptions $\gamma$, suppose li
 It means that there doesn't exist a model $\lambda\models\Phi$, such that $\lambda(l_b)=1$. Therefore, $\neg l_b$ is a backbone literal of $\Phi$, i.e., $\neg l\in\BL(\Phi)$.
 \end{proof}
 
-WAB Algorithm is able to compute the approximation of backbones of the given formula. When the length of unsatisfiable reason is 1, WAB saved solving time when determining if a variable is a backbone. Experiments show that, SAT testings with assumptions are generally finished within 1 second, while original SAT testing may take more than 1 minute. 
+WAB Algorithm is able to compute the approximation of backbones of the given formula. When the length of unsatisfiable reason is 1, WAB saved solving time when determining if a variable is a backbone. Experiments show that, SAT testings with assumptions are generally finished within 1 second, while original SAT testing may take more than 1 minute.
 
 Compared with the original Whitening Algorithm, the accuracy of Whitening-based Algorithm improved by two heuristic strategies (WCB and WAB) has increased. Missing backbone are added to the approximation through WCB and accurate backbone are confirmed with WAB. With a higher accuracy, backbone computing are guided better with $\BLap(\Phi)$.
