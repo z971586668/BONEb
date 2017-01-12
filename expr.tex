@@ -5,7 +5,7 @@ We implemented \tool in C++ interfacing MINISAT 2.2 \cite{MINISAT}.The experimen
 In the experiments, we separate formulae into groups. For example, if a set of formulae are generated from the application of hardware model checking, then they belong to the same group. We study the performance of \tool in 3 different groups, under different time limits. In 3600 seconds, results show that \tool saved 21\% solving time in total and performs the best in $\textit{manthey}$ group, saving 34\% of solving time. In 16000 seconds, results show that \tool solved 2 more formulae (49 formulae) than \minibones does.
 We also conduct experiments on 86 groups of random formulae, \tool saved 0.4\% solving time among all random formulae. In all 86 groups, \tool performs faster than \minibones on 58 of them.
 
-Experiments show that both \tool and \minibones are good at solving industrial formulae which have clear partitions of variables. For the solved formulae, \tool performs better than \minibones in general, especially on more complex formulae. \tool performs better on industrial formulae, which are more complex than random formulae. In the experiments of random formulae, results indicate that \tool is good at solving formula with more variables that have over 10 adjacent variables. More adjacent variables make the formula more complex. 
+Experiments show that both \tool and \minibones are good at solving industrial formulae which have clear partitions of variables. For the solved formulae, \tool performs better than \minibones in general, especially on more complex formulae. \tool performs better on industrial formulae, which are more complex than random formulae. In the experiments of random formulae, results indicate that \tool is good at solving formula with more variables that have over 10 adjacent variables. More adjacent variables make the formula more complex.
 \subsection{Benchmark Setup}
 
 % It's available at xxx.
@@ -26,7 +26,7 @@ Figure \ref{fig:ind} shows the solving time of all 34 industrial formulae, there
 When we take a look at the formulae in $\textit{manthey}$ group that \tool performs the best, we find that they all have a star-like adjacent structure as shown in Figure \ref{fig:cs}(a). It means that the variables is separate into different partitions, different variables from different partitions only appears in a few clauses at the same time. Each branch in the graph stands for a partition.
 
 
-
+\iffalse
 \begin{table}[t]
 \centering
 \begin{tabular}{ccccccc}
@@ -37,6 +37,23 @@ mrpp & 6112 & 6900 & \textbf{11\%} & 19541 & 22839 \\
 manthey & 4845 & 7363 & \textbf{34\%} & 49356 & 59562 \\
 dimacs & 1339 & 1369 & \textbf{2\%} & 2018 & 2022 \\
 total & 12296 & 15632 & \textbf{21\%} & 70915 & 84423 \\
+\bottomrule
+\end{tabular}
+\caption{Solving Time and SAT Tests Number Comparison on Industrial Formulae}
+\label{tab:ind}
+\end{table}
+\fi
+
+\begin{table}[t]
+\centering
+\begin{tabular}{ccccc}
+\toprule
+ Benchmark &$\textbf{st}$ of \tool(s) &$\textbf{st}$ of \minibones (s) & $\textbf{st}$ Difference \\
+\midrule
+mrpp & 6112 & 6900 & \textbf{11\%} \\
+manthey & 4845 & 7363 & \textbf{34\%} \\
+dimacs & 1339 & 1369 & \textbf{2\%} \\
+total & 12296 & 15632 & \textbf{21\%} \\
 \bottomrule
 \end{tabular}
 \caption{Solving Time and SAT Tests Number Comparison on Industrial Formulae}
@@ -82,7 +99,7 @@ Among all the 6600 random formulae, both \tool and \minibones are able to solve 
 \centering
 \begin{tabular}{ccc}
 \toprule
-  &$\textbf{Solving Time}$ & $\textbf{SAT Testings Number}$ \\
+  &$\textbf{Solving Time (s)}$ & $\textbf{SAT Testings Number}$ \\
 \midrule
 \tool & 50184 & 1508723  \\
 \minibones & 50414 & 1532372 \\

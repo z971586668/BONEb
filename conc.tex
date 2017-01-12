@@ -10,22 +10,17 @@
 
 %\section{Conclusion}\label{sec:conc}
 In this paper, we proposed a backbone computing approach named \tool, using Greedy-Whitening based algorithm.
-First, we computed an under-approximation of non-backbone $\NBLap(\Phi)$ using Greedy-based Algorithm in $O(n^2)$ time. Literals in $\NBLap(\Phi)$ didn't need an iterative SAT testing, the reducing number of SAT testings resulted in the saving of solving time.
+First, we computed an under-approximation of non-backbone $\NBLap(\Phi)$ using Greedy-based Algorithm in $O(n^2)$ time. Literals in $\NBLap(\Phi)$ didn't need an iterative SAT testing, the saving of SAT testings resulted in the saving of solving time.
 Next, we computed an approximation of backbone $\BLap(\Phi)$ using Whitening-based Algorithm. We iteratively extended the set of clauses $W_c$ and variables $W_v$ accordingly. $\BLap(\Phi)$ was the complement of $W_v$. Experiments showed that the proportions of backbone in $\BLap(\Phi)$ were higher than that in the original formula. Finding more backbone earlier will expedite backbone computing. It's because that more known backbone can prune more states in SAT solving.
 At last, we iteratively determined whether a literal is backbone from previous approximations.
 
 We compared \tool with state-of-art tool \minibones, on both industrial formulae and random formulae.
-Experimental results for industrial formulae demonstrated that both \tool and \minibones were able to solve 34 formulae from 72 formulae in 3600 seconds.
+Experimental results for industrial formulae demonstrated that both \tool and \minibones were able to solve 34 formulae from 72 formulae in 3600 seconds. Among the three industrial groups, \tool saved 21\% solving time in total than \minibones does. \tool performed the best in $\textit{manthey}$ group. For every formula in $\textit{manthey}$, \tool needed less solving time than \minibones does.
 \tool solved 49 formulae while \minibones solved 47 formula when the time limit was 16000 seconds.
-It indicated that \tool performs better than \minibones when the computing needed more time.
-When the time limit was 3600 seconds, we ran experiments on three industrial benchmark selected from SAT competitions. \tool saved 21\% solving time in total than \minibones does.
+On the other hand, \tool saved 0.4\% solving time compared to \minibones among 6600 random formulae.
+Experiments on 6600 formulae indicated that \tool outperforms \minibones if more than 84\% variables have over 10 adjacent variables.
 
-\tool performed better than tool \minibones on $\textit{manthey}$  benchmark selected from SAT competitions of industrial track. For every formula in $\textit{manthey}$ \tool needed less solving time than \minibones does, 34\% of solving time was saved by \tool.
-For the other two industrial benchmarks, \tool outperformed \minibones with less 8\% solving time on $\textit{mrpp}$, and less 11\% solving time on $\textit{dimacs}$ benchmark.
-For random formulae with 250 variables and 1065 clauses, \tool saved 1\% solving time compared to \minibones.
-Experiments on 6600 formulae indicated that \tool outperforms \minibones if more than 80\% variables have over 10 adjacent variables.
-
-Empirical results indicated that \tool performs better than \minibones on more complex adjacent structure. Industrial formulae have more complex adjacent structures than random formulae, since the scale of industrial formulae are larger. \tool performs better on industrial formulae than random formulae.
+Industrial formulae have more complex adjacent structures than random formulae, since the scale of industrial formulae are larger. \tool performs better on industrial formulae than random formulae.
 
 There were two major strategies used in Greedy-Whitening Algorithm, experiments showed that they performed differently on different benchmarks when applied independently, it opens a possibility for portfolio approach. How to decide which strategy to use on a given benchmark is the most important part portfolio approach.
 
