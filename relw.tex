@@ -2,24 +2,22 @@
 % This paper is concerned with computing backbones of propositional formulae, which was oriented from coloring problem \cite{CJG2001}, with a wide range of practical applications such as MaxSAT \cite{MMBM2005}.
 
 %A number of backbones extraction algorithms have been proposed in recent years.
-Kaiser and K\"{u}hlin proposed three model enumeration based algorithms for computing backbones \cite{KKW2001} using SAT solvers.
+Kaiser and K\"{u}hlin proposed three model enumeration based algorithms for computing backbones \cite{KKW2001} using SAT solvers. Since it is based on SAT techniques, it is still applicable when BDDs reach their space limits. It have been applied to automotive product data verification.
 %The first one iteratively assigns true (false) to each variable and tests the resulting formula for satisfiability.
 %The second one reuse the results of previous satisfiability checks and the last one maximizes the number of variables that
 %an be classified without satisfiability checking, which share same purpose as our work.
 %
-Dubois and Dequen proposed a heuristic search for computing backbones of hard 3-SAT formulae which yields DPL-type algorithms with a significant
-performance improvement over the best previous algorithms \cite{DD2001}.
-Climer et al. proposed a graph-based approach to discover backbones which approximates lower and upper bounds to compute
-backbones \cite{CZ2002}.% of instances of the travelling salesman problem .
+Dubois and Dequen proposed a heuristic search for computing backbones of hard 3-SAT formulae which yields DPL-type algorithms with a significant performance improvement over the best previous algorithms \cite{DD2001}.
+Climer et al. proposed a graph-based approach to discover backbones which approximates lower and upper bounds to compute backbones \cite{CZ2002}. It is able to consistently find two to three more times backbone than previous work CDT~\cite{CDT1995}.% of instances of the travelling salesman problem .
 %Kilby et al. showed that backbones are hard even to approximate and proposed algorithms for computing backdoors which little overlap with backbones \cite{KPS2005}.
 %and proposed algorithms for computing backdoors, that are literals/variables whose absence will simplify formulas to be solved in polynomial time %\cite{KPS2005}. As discussed by \cite{KPS2005}, backbones have little overlap with backdoors.
 %
 %
-Zhu et al, proposed an iterative SAT testing based algorithm \cite{ZWSM11,ZWM11} which is more efficient than previous model enumeration.
+Zhu et al, proposed an iterative SAT testing based algorithm \cite{ZWSM11,ZWM11} and applied to fault localisation, experimental results demonstrate that the use of backbone reduced the size of searching space of it, such as sliding windows and trace buffer. 
 %At the first step, this algorithm assigned the first model returned from SAT solver to backbone estimation, which need less memory to compute backbone.
 
 Marques-Silva et al.  investigated algorithms for computing backbones emphasizing the integration of existing algorithms which include model enumeration, iterative SAT-testing and filtering with modern SAT solvers, as well as optimisations.
-They conducted an experimental evaluation of existing techniques and showed that backbone computation for large practical formulae is feasible. \cite{MJML2010,JLMS12,JLM15}.
+They conducted an experimental evaluation of existing techniques and showed that backbone computation for large practical formulae is feasible, with over 70,000 variables and 250,000 more claues. \cite{MJML2010,JLMS12,JLM15}.
 %In this work, we proposed a novel Greedy-Whitening based approach \tool.
 %Experimental results demonstrated that our approach performs better than the best one of algorithms in \cite{MJML2010,JLMS12,JLM15} for industrial formulae and
 %hard random formulae, while for simple formulae, \tool is also comparable.
